@@ -1,3 +1,4 @@
+
 package com.trackingapp.backend.config;
 
 import org.springframework.context.annotation.Bean;
@@ -32,25 +33,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(authorize -> authorize
-                        // Public
+
+                        // Autoriser les requêtes preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Endpoints publics
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,  "/api/tracking/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tracking/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
 
-                        // Admin
+                        // Endpoints administrateur
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                        // Tout le reste : authentifié
+                        // Les autres endpoints nécessitent une authentification
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
@@ -64,16 +71,30 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowedOrigins(List.of(
+                "https://starline-xi.vercel.app",
                 "http://localhost:4200",
                 "http://localhost:8080"
         ));
-        config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+
+        config.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS"
+        ));
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
