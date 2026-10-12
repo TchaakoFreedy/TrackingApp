@@ -1,5 +1,5 @@
 
-package com.trackingapp.backend.config;
+        package com.trackingapp.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,19 +45,11 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-
-                        // Autoriser les requêtes preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // Endpoints publics
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tracking/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
-
-                        // Endpoints administrateur
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-                        // Les autres endpoints nécessitent une authentification
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
