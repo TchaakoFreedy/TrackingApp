@@ -1,0 +1,254 @@
+.admin-form {
+  padding: 50px 0 80px;
+  background: var(--soft);
+  min-height: 100vh;
+}
+
+/* ============================================================= */
+/* BACK LINK                                                      */
+/* ============================================================= */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 22px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.back-link svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+.back-link:hover {
+  color: var(--gold-dark);
+}
+.back-link:hover svg {
+  transform: translateX(-4px);
+}
+
+/* ============================================================= */
+/* HEADER                                                         */
+/* ============================================================= */
+.form-header {
+  margin-bottom: 30px;
+}
+.form-header h1 {
+  margin: 8px 0 6px;
+  color: var(--navy);
+  font-size: 32px;
+}
+.form-header h1.code-title {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  font-size: 26px;
+}
+.form-header p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ============================================================= */
+/* FORM CARDS                                                     */
+/* ============================================================= */
+.form-card,
+.info-card,
+.status-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 34px;
+  box-shadow: 0 8px 24px rgba(12, 30, 51, 0.06);
+  margin-bottom: 24px;
+}
+
+/* ---------- SECTIONS IN CREATION FORM ---------- */
+.form-section {
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+}
+
+.form-section h3,
+.info-card h3,
+.status-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: var(--navy-2);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+.form-section h3 svg,
+.info-card h3 svg,
+.status-card h3 svg {
+  width: 18px;
+  height: 18px;
+  color: var(--gold-dark);
+  flex-shrink: 0;
+}
+
+/* ============================================================= */
+/* FORM GRID                                                      */
+/* ============================================================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy-2);
+  letter-spacing: 0.4px;
+}
+label.full {
+  margin-top: 20px;
+}
+
+input,
+select,
+textarea {
+  padding: 11px 14px;
+  border: 1px solid #d6dde7;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-family: inherit;
+  background: #fafbfd;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  width: 100%;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #a9b4c2;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(35, 107, 167, 0.12);
+}
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* ============================================================= */
+/* ACTIONS                                                        */
+/* ============================================================= */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 26px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================= */
+/* EDIT GRID                                                      */
+/* ============================================================= */
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ---------- INFO CARD ---------- */
+.info-card dl {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 12px 20px;
+  font-size: 13.5px;
+  margin: 0;
+}
+.info-card dt {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12.5px;
+}
+.info-card dd {
+  margin: 0;
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* ---------- STATUS CARD ---------- */
+.status-card label {
+  margin-bottom: 16px;
+}
+
+/* ============================================================= */
+/* STATUS BADGES — ENGLISH STATUSES                               */
+/* ============================================================= */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  background: #eef2f7;
+  color: #33445a;
+}
+.status-badge[data-statut="PENDING"]            { background: #f1f3f6; color: #6c7a8c; }
+.status-badge[data-statut="PICKED_UP"]          { background: #e3f0fb; color: #236ba7; }
+.status-badge[data-statut="IN_TRANSIT"]         { background: #fff4dd; color: #b8801c; }
+.status-badge[data-statut="AT_DESTINATION"]     { background: #e8eaf8; color: #4a54b8; }
+.status-badge[data-statut="OUT_FOR_DELIVERY"]   { background: #e0f3ff; color: #0d6fb8; }
+.status-badge[data-statut="DELIVERED"]          { background: #e3f6e8; color: #1f8f4d; }
+.status-badge[data-statut="DELIVERY_FAILED"]    { background: #fde8e8; color: #b8383b; }
+.status-badge[data-statut="RETURNED"]           { background: #fce9dc; color: #a85a1c; }
+.status-badge[data-statut="CANCELLED"]          { background: #f0f0f0; color: #6c7a8c; }
+
+/* ============================================================= */
+/* ÉTATS                                                          */
+/* ============================================================= */
+.admin-loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  background: #fff;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.loading-spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #d6dde7;
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================= */
+/* RESPONSIVE                                                     */
+/* ============================================================= */
+@media (max-width: 860px) {
+  .edit-grid { grid-template-columns: 1fr; }
+  .form-card,
+  .info-card,
+  .status-card { padding: 26px 22px; }
+  .form-header h1 { font-size: 26px; }
+}

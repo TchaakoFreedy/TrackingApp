@@ -1,0 +1,311 @@
+<section class="admin-form">
+  <div class="container">
+
+    <a class="back-link" routerLink="/admin/colis">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to shipments
+    </a>
+
+    @if (chargement) {
+      <div class="admin-loading">
+        <span class="loading-spinner"></span>
+        <p>Loading…</p>
+      </div>
+    }
+
+    <!-- ============ CREATION ============ -->
+    @if (mode === 'creation') {
+      <div class="form-header">
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1>New Shipment</h1>
+        <p>Fill in the shipment information.</p>
+      </div>
+
+      <form (ngSubmit)="creer()" class="form-card">
+
+        <div class="form-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Sender
+          </h3>
+          <div class="form-grid">
+            <label>
+              Name *
+              <input name="nomExpediteur" [(ngModel)]="model.nomExpediteur" required />
+            </label>
+            <label>
+              Phone
+              <input name="telephoneExpediteur" [(ngModel)]="model.telephoneExpediteur" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="emailExpediteur" [(ngModel)]="model.emailExpediteur" />
+            </label>
+            <label>
+              Address
+              <input name="adresseExpediteur" [(ngModel)]="model.adresseExpediteur" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Recipient
+          </h3>
+          <div class="form-grid">
+            <label>
+              Name *
+              <input name="nomDestinataire" [(ngModel)]="model.nomDestinataire" required />
+            </label>
+            <label>
+              Phone
+              <input name="telephoneDestinataire" [(ngModel)]="model.telephoneDestinataire" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="emailDestinataire" [(ngModel)]="model.emailDestinataire" />
+            </label>
+            <label>
+              Address
+              <input name="adresseDestinataire" [(ngModel)]="model.adresseDestinataire" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Origin &amp; Destination
+          </h3>
+          <div class="form-grid">
+            <label>
+              Origin City *
+              <input name="villeOrigine" [(ngModel)]="model.villeOrigine" required />
+            </label>
+            <label>
+              Origin Country
+              <input name="paysOrigine" [(ngModel)]="model.paysOrigine" />
+            </label>
+            <label>
+              Destination City *
+              <input name="villeDestination" [(ngModel)]="model.villeDestination" required />
+            </label>
+            <label>
+              Destination Country
+              <input name="paysDestination" [(ngModel)]="model.paysDestination" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"/>
+              <path d="M16 8h4l3 3v5h-7V8z"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            Transport
+          </h3>
+          <div class="form-grid">
+            <label>
+              Carrier
+              <input name="transporteur" [(ngModel)]="model.transporteur" />
+            </label>
+            <label>
+              Shipment Type
+              <input name="typeExpedition" [(ngModel)]="model.typeExpedition" />
+            </label>
+            <label>
+              Transport Mode
+              <select name="modeTransport" [(ngModel)]="model.modeTransport">
+                <option value="">—</option>
+                <option value="AIR">Air</option>
+                <option value="SEA">Sea</option>
+                <option value="ROAD">Road</option>
+              </select>
+            </label>
+            <label>
+              Carrier Reference
+              <input name="referenceTransporteur" [(ngModel)]="model.referenceTransporteur" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            </svg>
+            Goods
+          </h3>
+          <div class="form-grid">
+            <label>
+              Product
+              <input name="produit" [(ngModel)]="model.produit" />
+            </label>
+            <label>
+              Quantity
+              <input type="number" name="quantite" [(ngModel)]="model.quantite" />
+            </label>
+            <label>
+              Weight (kg)
+              <input type="number" step="0.01" name="poids" [(ngModel)]="model.poids" />
+            </label>
+            <label>
+              Expected Delivery
+              <input type="date" name="dateLivraisonPrevue" [(ngModel)]="model.dateLivraisonPrevue" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            Location &amp; Notes
+          </h3>
+          <div class="form-grid">
+            <label>
+              Current City
+              <input name="villeActuelle" [(ngModel)]="model.villeActuelle" />
+            </label>
+            <label>
+              Current Place
+              <input name="lieuActuel" [(ngModel)]="model.lieuActuel" />
+            </label>
+            <label>
+              Latitude
+              <input type="number" step="0.000001" name="latitude" [(ngModel)]="model.latitude" />
+            </label>
+            <label>
+              Longitude
+              <input type="number" step="0.000001" name="longitude" [(ngModel)]="model.longitude" />
+            </label>
+          </div>
+        </div>
+
+        <label class="full">
+          Comments
+          <textarea name="commentaires" rows="3" [(ngModel)]="model.commentaires"></textarea>
+        </label>
+
+        <div class="form-actions">
+          <button class="button button-primary" type="submit" [disabled]="chargement">
+            Create Shipment
+          </button>
+          <a class="button button-outline" routerLink="/admin/colis">Cancel</a>
+        </div>
+
+        @if (message) { <p class="form-notice">{{ message }}</p> }
+        @if (erreur)  { <p class="alert-error">{{ erreur }}</p> }
+      </form>
+    }
+
+    <!-- ============ EDITION ============ -->
+    @if (mode === 'edition' && model.codeSuivi) {
+      <div class="form-header">
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1 class="code-title">{{ model.codeSuivi }}</h1>
+        <p>{{ model.villeOrigine }} → {{ model.villeDestination }}</p>
+      </div>
+
+      <div class="edit-grid">
+
+        <div class="info-card">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            Information
+          </h3>
+          <dl>
+            <dt>Sender</dt><dd>{{ model.nomExpediteur }}</dd>
+            <dt>Recipient</dt><dd>{{ model.nomDestinataire }}</dd>
+            <dt>Current status</dt>
+            <dd>
+              <span class="status-badge" [attr.data-statut]="model.statut">
+                {{ libelleStatut(model.statut) }}
+              </span>
+            </dd>
+            <dt>Current city</dt><dd>{{ model.villeActuelle || '—' }}</dd>
+            <dt>Current place</dt><dd>{{ model.lieuActuel || '—' }}</dd>
+            <dt>Expected delivery</dt><dd>{{ model.dateLivraisonPrevue || '—' }}</dd>
+            <dt>Carrier</dt><dd>{{ model.transporteur || '—' }}</dd>
+            <dt>Mode</dt><dd>{{ model.modeTransport || '—' }}</dd>
+          </dl>
+        </div>
+
+        <form class="status-card" (ngSubmit)="mettreAJourStatut()">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"/>
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+            </svg>
+            Update Status
+          </h3>
+
+          <label>
+            New status *
+            <select name="statut" [(ngModel)]="statutMaj.statut" required>
+              @for (s of statuts; track s) {
+                <option [value]="s">{{ libelleStatut(s) }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Description
+            <input name="description" [(ngModel)]="statutMaj.description" />
+          </label>
+
+          <div class="form-grid">
+            <label>
+              Current city
+              <input name="villeActuelle" [(ngModel)]="statutMaj.villeActuelle" />
+            </label>
+            <label>
+              Current place
+              <input name="lieuActuel" [(ngModel)]="statutMaj.lieuActuel" />
+            </label>
+            <label>
+              Latitude
+              <input type="number" step="0.000001" name="latitude" [(ngModel)]="statutMaj.latitude" />
+            </label>
+            <label>
+              Longitude
+              <input type="number" step="0.000001" name="longitude" [(ngModel)]="statutMaj.longitude" />
+            </label>
+          </div>
+
+          <label>
+            Notes
+            <textarea name="remarques" rows="2" [(ngModel)]="statutMaj.remarques"></textarea>
+          </label>
+
+          <button class="button button-primary" type="submit" [disabled]="chargement">
+            Save Status
+          </button>
+
+          @if (message) { <p class="form-notice">{{ message }}</p> }
+          @if (erreur)  { <p class="alert-error">{{ erreur }}</p> }
+        </form>
+      </div>
+    }
+  </div>
+</section>

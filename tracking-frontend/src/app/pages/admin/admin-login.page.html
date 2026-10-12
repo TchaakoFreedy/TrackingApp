@@ -1,0 +1,66 @@
+<section class="admin-login-page">
+  <div class="admin-login-bg-pattern"></div>
+
+  <div class="admin-login-card">
+
+    <a class="brand admin-brand" routerLink="/">
+      <span class="brand-symbol">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="brand-name">
+        <strong>STARLINE</strong>
+        <small>EXPRESS</small>
+      </span>
+    </a>
+
+    <div class="admin-login-heading">
+      <span class="eyebrow">ADMINISTRATION</span>
+      <h1>Welcome Back</h1>
+      <p>Sign in to manage shipments and tracking updates.</p>
+    </div>
+
+    <form class="admin-login-form" (ngSubmit)="connexion()">
+      <div class="form-group">
+        <label for="admin-email">Administrator Email</label>
+        <input
+          id="admin-email"
+          name="email"
+          type="email"
+          [(ngModel)]="email"
+          required
+          autocomplete="username"
+          placeholder="admin@starline-express.com" />
+      </div>
+
+      <div class="form-group">
+        <label for="admin-password">Password</label>
+        <input
+          id="admin-password"
+          name="password"
+          type="password"
+          [(ngModel)]="motDePasse"
+          required
+          autocomplete="current-password"
+          placeholder="Enter your password" />
+      </div>
+
+      @if (erreur) {
+        <p class="login-error" role="alert">{{ erreur }}</p>
+      }
+
+      <button class="button button-primary login-submit"
+              type="submit"
+              [disabled]="chargement">
+        {{ chargement ? 'Signing in…' : 'Sign In' }}
+      </button>
+    </form>
+
+    <a class="back-home-link" routerLink="/">
+      ← Back to website
+    </a>
+
+    <p class="login-security-note">
+      Authorized personnel only.
+    </p>
+  </div>
+</section>

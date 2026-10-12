@@ -1,0 +1,276 @@
+<header class="site-header">
+  <div class="container header-content">
+
+    <!-- BRAND -->
+    <a class="brand" routerLink="/" aria-label="Starline Express" (click)="closeMobileMenu()">
+      <span class="brand-symbol">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="brand-name">
+        <strong>STARLINE</strong>
+        <small>EXPRESS</small>
+      </span>
+    </a>
+
+    <!-- DESKTOP NAV -->
+    <nav class="main-nav" aria-label="Main navigation">
+      <a routerLink="/" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a routerLink="/about" routerLinkActive="active">About Us</a>
+      <a routerLink="/services" routerLinkActive="active">Our Services</a>
+      <a routerLink="/contact" routerLinkActive="active">Contact</a>
+    </nav>
+
+    <!-- TRACK BUTTON (desktop + mobile) -->
+    <a class="header-track-button" routerLink="/track">
+      Track Shipment <span aria-hidden="true">→</span>
+    </a>
+
+    <!-- HAMBURGER (mobile only) -->
+    <button
+      class="hamburger"
+      type="button"
+      [class.is-open]="mobileMenuOpen"
+      (click)="toggleMobileMenu()"
+      [attr.aria-expanded]="mobileMenuOpen"
+      aria-label="Toggle navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+</header>
+
+<!-- ============================================================= -->
+<!-- SIDEBAR MOBILE                                                 -->
+<!-- ============================================================= -->
+
+<!-- Overlay -->
+@if (mobileMenuOpen) {
+  <div class="mobile-menu-backdrop"
+       (click)="closeMobileMenu()"
+       aria-hidden="true"></div>
+}
+
+<!-- Sidebar -->
+<aside class="mobile-menu"
+       [class.is-open]="mobileMenuOpen"
+       [attr.aria-hidden]="!mobileMenuOpen">
+
+  <div class="mobile-menu-head">
+    <a class="brand" routerLink="/" (click)="closeMobileMenu()">
+      <span class="brand-symbol">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="brand-name">
+        <strong>STARLINE</strong>
+        <small>EXPRESS</small>
+      </span>
+    </a>
+
+    <button class="mobile-menu-close"
+            type="button"
+            (click)="closeMobileMenu()"
+            aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="mobile-menu-nav" aria-label="Mobile navigation">
+    <a routerLink="/" routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }"
+       (click)="closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12l9-9 9 9M5 10v10h14V10"/>
+      </svg>
+      Home
+    </a>
+
+    <a routerLink="/about" routerLinkActive="active"
+       (click)="closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 8h.01M11 12h1v4h1"/>
+      </svg>
+      About Us
+    </a>
+
+    <a routerLink="/services" routerLinkActive="active"
+       (click)="closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 7l-8-4-8 4 8 4 8-4zM4 7v10l8 4 8-4V7"/>
+      </svg>
+      Our Services
+    </a>
+
+    <a routerLink="/contact" routerLinkActive="active"
+       (click)="closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 4h16v16H4zM22 6l-10 7L2 6"/>
+      </svg>
+      Contact
+    </a>
+
+    <div class="mobile-menu-sep"></div>
+
+    <a routerLink="/track" (click)="closeMobileMenu()" class="mobile-menu-cta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+      Track Shipment
+    </a>
+
+    <a routerLink="/admin/login" (click)="closeMobileMenu()" class="mobile-menu-admin">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="4" y="11" width="16" height="10" rx="2"/>
+        <path d="M8 11V8a4 4 0 018 0v3"/>
+      </svg>
+      Admin Login
+    </a>
+  </nav>
+
+  <div class="mobile-menu-foot">
+    <span>© {{ currentYear }} Starline Express</span>
+  </div>
+</aside>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+
+  <!-- BANDEAU TRANSPORTS (vraies photos) -->
+  <div class="footer-transport-strip">
+    <div class="container transport-grid">
+
+      <div class="transport-item" title="Air Freight">
+        <div class="transport-image">
+          <img
+            src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=400&q=80"
+            alt="Air Freight"
+            loading="lazy" />
+        </div>
+        <span>Air Freight</span>
+      </div>
+
+      <div class="transport-item" title="Sea Freight">
+        <div class="transport-image">
+          <img
+            src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=400&q=80"
+            alt="Sea Freight"
+            loading="lazy" />
+        </div>
+        <span>Sea Freight</span>
+      </div>
+
+      <div class="transport-item" title="Container">
+        <div class="transport-image">
+          <img
+            src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=400&q=80"
+            alt="Container"
+            loading="lazy" />
+        </div>
+        <span>Container</span>
+      </div>
+
+      <div class="transport-item" title="Road Transport">
+        <div class="transport-image">
+          <img
+            src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=400&q=80"
+            alt="Road Transport"
+            loading="lazy" />
+        </div>
+        <span>Road Transport</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTENU PRINCIPAL DU FOOTER -->
+  <div class="container footer-main">
+
+    <!-- BRAND COLUMN -->
+    <div class="footer-brand">
+      <a class="brand footer-logo" routerLink="/">
+        <span class="brand-symbol">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="brand-name">
+          <strong>STARLINE</strong>
+          <small>EXPRESS</small>
+        </span>
+      </a>
+      <p>Reliable logistics. Secure shipments. Global connections.</p>
+    </div>
+
+    <!-- QUICK LINKS COLUMN -->
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <a routerLink="/">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12l9-9 9 9M5 10v10h14V10"/>
+        </svg>
+        Home
+      </a>
+      <a routerLink="/about">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8h.01M11 12h1v4h1"/>
+        </svg>
+        About Us
+      </a>
+      <a routerLink="/services">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 7l-8-4-8 4 8 4 8-4zM4 7v10l8 4 8-4V7"/>
+        </svg>
+        Our Services
+      </a>
+      <a routerLink="/contact">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16v16H4zM22 6l-10 7L2 6"/>
+        </svg>
+        Contact
+      </a>
+    </div>
+
+    <!-- SHIPPING COLUMN -->
+    <div class="footer-column">
+      <h3>Shipping</h3>
+      <a routerLink="/track">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        Track a Shipment
+      </a>
+      <a routerLink="/services">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 3.13a4 4 0 010 7.75M8 3.13a4 4 0 000 7.75M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2"/>
+        </svg>
+        Our Services
+      </a>
+    </div>
+
+    <!-- ADMINISTRATION COLUMN -->
+    <div class="footer-column">
+      <h3>Administration</h3>
+      <a routerLink="/admin/login">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="4" y="11" width="16" height="10" rx="2"/>
+          <path d="M8 11V8a4 4 0 018 0v3"/>
+        </svg>
+        Admin Login
+      </a>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <span>© {{ currentYear }} Starline Express. All rights reserved.</span>
+    <a routerLink="/track">Track your shipment →</a>
+  </div>
+</footer>

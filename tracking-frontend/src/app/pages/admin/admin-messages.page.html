@@ -1,0 +1,194 @@
+<section class="admin-messages">
+  <div class="container">
+
+    <div class="admin-header">
+      <div>
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1>Contact Messages</h1>
+        <p>Read and manage messages sent by customers.</p>
+      </div>
+      <a class="button button-outline" routerLink="/admin/colis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to shipments
+      </a>
+    </div>
+
+    <div class="admin-toolbar">
+      <div class="admin-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          placeholder="Search by name, email, message…"
+          [(ngModel)]="filtreTexte"
+          name="filtreTexte" />
+      </div>
+
+      <select [(ngModel)]="filtreStatut" name="filtreStatut">
+        @for (s of statuts; track s) {
+          <option [ngValue]="s">
+            {{ s ? libelleStatut(s) : 'All statuses' }}
+          </option>
+        }
+      </select>
+
+      <button class="button button-outline" type="button" (click)="charger()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+
+    @if (chargement) {
+      <div class="admin-loading">
+        <span class="loading-spinner"></span>
+        <p>Loading messages…</p>
+      </div>
+    }
+
+    @if (erreur) {
+      <div class="alert-error">{{ erreur }}</div>
+    }
+
+    @if (!chargement && messagesFiltres.length === 0) {
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16v12H5.17L4 17.17z"/>
+          <path d="M8 9h8M8 13h5"/>
+        </svg>
+        <p>No messages match your search.</p>
+      </div>
+    }
+
+    @if (messagesFiltres.length) {
+      <div class="messages-list">
+        @for (m of messagesFiltres; track m.id) {
+          <article class="message-card"
+                   [class.unread]="m.statut === 'NOUVEAU'"
+                   (click)="ouvrirDetail(m)">
+            <div class="message-head">
+              <div>
+                <strong>{{ m.nom }}</strong>
+                <small>{{ m.email }}</small>
+              </div>
+              <span class="status-badge" [attr.data-statut]="m.statut">
+                {{ libelleStatut(m.statut) }}
+              </span>
+            </div>
+
+            <p class="message-preview">
+              {{ m.message.length > 140 ? (m.message | slice:0:140) + '…' : m.message }}
+            </p>
+
+            <div class="message-foot">
+              <small>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+                {{ formatDate(m.dateCreation) }}
+              </small>
+              @if (m.reference) {
+                <small>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  Ref: {{ m.reference }}
+                </small>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- MODAL                                                          -->
+<!-- ============================================================= -->
+@if (messageSelectionne; as msg) {
+  <div class="modal-backdrop" (click)="fermerDetail()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow">MESSAGE</span>
+          <h2>{{ msg.nom }}</h2>
+          <p>{{ msg.email }}</p>
+        </div>
+        <button class="modal-close" type="button" (click)="fermerDetail()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="modal-meta">
+          <span class="status-badge" [attr.data-statut]="msg.statut">
+            {{ libelleStatut(msg.statut) }}
+          </span>
+          <small>Received on {{ formatDate(msg.dateCreation) }}</small>
+        </div>
+
+        @if (msg.reference) {
+          <div class="modal-field">
+            <strong>Tracking Reference</strong>
+            <span class="mono">{{ msg.reference }}</span>
+          </div>
+        }
+
+        @if (msg.telephone) {
+          <div class="modal-field">
+            <strong>Phone</strong>
+            <span>{{ msg.telephone }}</span>
+          </div>
+        }
+
+        <div class="modal-field">
+          <strong>Message</strong>
+          <p class="modal-message">{{ msg.message }}</p>
+        </div>
+
+        @if (msg.reponseAdmin) {
+          <div class="modal-field">
+            <strong>Admin Reply</strong>
+            <p class="modal-message">{{ msg.reponseAdmin }}</p>
+          </div>
+        }
+      </div>
+
+      <div class="modal-actions">
+        @if (msg.statut !== 'EN_COURS') {
+          <button class="button button-outline" type="button"
+                  (click)="marquerEnCours(msg)">
+            Mark in progress
+          </button>
+        }
+        @if (msg.statut !== 'TRAITE') {
+          <button class="button button-primary" type="button"
+                  (click)="marquerTraite(msg)">
+            Mark as handled
+          </button>
+        }
+        <button class="button button-outline" type="button"
+                (click)="archiver(msg)">
+          Archive
+        </button>
+        <button class="button button-danger" type="button"
+                (click)="supprimer(msg)">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+}

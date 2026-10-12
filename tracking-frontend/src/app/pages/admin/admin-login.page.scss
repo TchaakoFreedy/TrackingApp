@@ -1,0 +1,194 @@
+.admin-login-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(35, 107, 167, 0.18), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(215, 169, 75, 0.18), transparent 55%),
+    linear-gradient(135deg, #0c1e33 0%, #173f6c 100%);
+}
+
+/* Motif décoratif */
+.admin-login-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.02) 0,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 20px
+    );
+  pointer-events: none;
+}
+
+.admin-login-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 460px;
+  padding: 48px 42px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+  animation: cardIn 0.5s ease;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 32px;
+  text-decoration: none;
+  color: #10243d;
+}
+
+.brand-symbol {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transform: skew(-15deg);
+}
+.brand-symbol span {
+  display: block;
+  width: 8px;
+  height: 28px;
+  background: #173f6c;
+  border-radius: 2px;
+}
+.brand-symbol span:nth-child(2) { height: 36px; background: #236ba7; }
+.brand-symbol span:nth-child(3) { height: 21px; background: #d7a94b; }
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand-name strong {
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+.brand-name small {
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+}
+
+.admin-login-heading {
+  margin-bottom: 30px;
+}
+.admin-login-heading .eyebrow {
+  color: var(--gold-dark);
+}
+.admin-login-heading h1 {
+  margin: 8px 0 8px;
+  font-size: 28px;
+  color: var(--navy);
+}
+.admin-login-heading p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.admin-login-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.admin-login-form label {
+  color: var(--navy-2);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.admin-login-form input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d6dde7;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fafbfd;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.admin-login-form input::placeholder {
+  color: #a9b4c2;
+}
+.admin-login-form input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(35, 107, 167, 0.12);
+}
+
+.login-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 6px;
+}
+
+.login-error {
+  padding: 12px 14px;
+  margin: 0 0 16px;
+  background: #fde8e8;
+  border-left: 4px solid #b8383b;
+  color: #8a2b2d;
+  font-size: 12.5px;
+  border-radius: 8px;
+  animation: shakeError 0.4s ease;
+}
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+
+.back-home-link {
+  display: inline-block;
+  margin-top: 26px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.back-home-link:hover {
+  color: var(--gold-dark);
+  transform: translateX(-3px);
+}
+
+.login-security-note {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+  letter-spacing: 0.6px;
+}
+
+@media (max-width: 520px) {
+  .admin-login-card {
+    padding: 36px 26px;
+  }
+  .admin-login-heading h1 {
+    font-size: 24px;
+  }
+}

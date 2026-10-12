@@ -1,0 +1,325 @@
+.admin-dashboard {
+  padding: 50px 0 80px;
+  background: var(--soft);
+  min-height: 100vh;
+}
+
+/* ============================================================= */
+/* HEADER                                                         */
+/* ============================================================= */
+.admin-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+.admin-header-title h1 {
+  font-size: 32px;
+  color: var(--navy);
+  margin: 6px 0;
+}
+.admin-header-title p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 14px;
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-header-actions .button {
+  gap: 8px;
+}
+.admin-header-actions .button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================================= */
+/* STATS STRIP                                                    */
+/* ============================================================= */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.admin-stat {
+  padding: 22px 24px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(12, 30, 51, 0.06);
+  border-left: 4px solid var(--gold);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.admin-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(12, 30, 51, 0.1);
+}
+.admin-stat-value {
+  display: block;
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.admin-stat-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ============================================================= */
+/* TOOLBAR                                                        */
+/* ============================================================= */
+.admin-toolbar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.admin-search {
+  position: relative;
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+}
+.admin-search svg {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.admin-search input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border: 1px solid #d6dde7;
+  border-radius: 8px;
+  font-size: 13.5px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-search input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(35, 107, 167, 0.12);
+}
+
+.admin-toolbar select {
+  padding: 12px 14px;
+  border: 1px solid #d6dde7;
+  border-radius: 8px;
+  font-size: 13.5px;
+  min-width: 180px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.admin-toolbar select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(35, 107, 167, 0.12);
+}
+
+.admin-toolbar .button {
+  gap: 8px;
+}
+.admin-toolbar .button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================================= */
+/* TABLE                                                          */
+/* ============================================================= */
+.table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(12, 30, 51, 0.06);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.admin-table thead {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: #fff;
+}
+.admin-table th {
+  text-align: left;
+  padding: 16px 18px;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.admin-table th.align-right { text-align: right; }
+
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+.admin-table tbody tr:hover { background: #fafcff; }
+.admin-table tbody tr:last-child { border-bottom: none; }
+
+.admin-table td {
+  padding: 16px 18px;
+  font-size: 13.5px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.code-cell {
+  display: inline-block;
+  padding: 5px 10px;
+  background: rgba(35, 107, 167, 0.08);
+  color: var(--navy-2);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 12.5px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.route-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.route-arrow {
+  color: var(--gold-dark);
+  font-weight: 700;
+}
+
+/* ============================================================= */
+/* STATUTS                                                        */
+/* ============================================================= */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  background: #eef2f7;
+  color: #33445a;
+}
+.status-badge[data-statut="EN_ATTENTE"]           { background: #f1f3f6; color: #6c7a8c; }
+.status-badge[data-statut="RECUPERE"]             { background: #e3f0fb; color: #236ba7; }
+.status-badge[data-statut="EN_TRANSIT"]           { background: #fff4dd; color: #b8801c; }
+.status-badge[data-statut="ARRIVE_A_DESTINATION"] { background: #e8eaf8; color: #4a54b8; }
+.status-badge[data-statut="EN_LIVRAISON"]         { background: #e0f3ff; color: #0d6fb8; }
+.status-badge[data-statut="LIVRE"]                { background: #e3f6e8; color: #1f8f4d; }
+.status-badge[data-statut="ECHEC_LIVRAISON"]      { background: #fde8e8; color: #b8383b; }
+.status-badge[data-statut="RETOURNE"]             { background: #fce9dc; color: #a85a1c; }
+.status-badge[data-statut="ANNULE"]               { background: #f0f0f0; color: #6c7a8c; }
+
+/* ============================================================= */
+/* ACTIONS TABLE                                                  */
+/* ============================================================= */
+.actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+}
+.actions .link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--blue);
+  background: none;
+  border: none;
+  padding: 0;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.actions .link svg {
+  width: 14px;
+  height: 14px;
+}
+.actions .link:hover {
+  color: var(--navy-2);
+  transform: translateX(2px);
+}
+.actions .link.danger { color: #b8383b; }
+.actions .link.danger:hover { color: #8a2b2d; }
+
+/* ============================================================= */
+/* ÉTATS                                                          */
+/* ============================================================= */
+.admin-loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  background: #fff;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.loading-spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #d6dde7;
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  padding: 60px 30px;
+  background: #fff;
+  border-radius: 14px;
+  text-align: center;
+  color: var(--muted);
+}
+.empty-state svg {
+  width: 56px;
+  height: 56px;
+  color: #cfd8e3;
+  margin-bottom: 14px;
+}
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ============================================================= */
+/* RESPONSIVE                                                     */
+/* ============================================================= */
+@media (max-width: 900px) {
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .admin-header-actions { width: 100%; }
+  .admin-header-actions .button { flex: 1; justify-content: center; }
+  .admin-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .admin-stat { padding: 18px 16px; }
+  .admin-stat-value { font-size: 24px; }
+}

@@ -1,0 +1,291 @@
+<!-- ============================================================= -->
+<!-- HERO                                                           -->
+<!-- ============================================================= -->
+<section class="track-hero">
+  <div class="track-hero-bg"
+       style="background-image:url('https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1920&q=80')">
+  </div>
+  <div class="track-hero-overlay"></div>
+
+  <div class="container track-hero-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>/</span>
+      <span class="current">Track Shipment</span>
+    </nav>
+
+    <span class="eyebrow">SHIPMENT TRACKING</span>
+    <h1>Track Your Shipment</h1>
+    <p>Enter your tracking number to view the latest recorded update.</p>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- RECHERCHE                                                      -->
+<!-- ============================================================= -->
+<section class="tracking-search-section">
+  <div class="container">
+
+    <form class="tracking-search" (ngSubmit)="suivreColis()">
+      <label for="tracking-code">Tracking Number</label>
+
+      <div class="tracking-input-row">
+        <input
+          id="tracking-code"
+          name="trackingCode"
+          [(ngModel)]="codeSuivi"
+          required
+          autocomplete="off"
+          [disabled]="chargement" />
+
+        <button
+          class="button button-primary"
+          type="submit"
+          [disabled]="chargement || !codeSuivi.trim()">
+          {{ chargement ? 'Searching…' : 'Track' }}
+        </button>
+      </div>
+
+      <p class="tracking-hint">
+        Your tracking number is available in your shipment confirmation.
+      </p>
+    </form>
+
+    @if (chargement) {
+      <div class="tracking-loading" role="status" aria-live="polite">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <p>Searching for your shipment…</p>
+      </div>
+    }
+
+    @if (erreur) {
+      <div class="alert-error" role="alert">{{ erreur }}</div>
+    }
+
+    @if (colis; as shipment) {
+      <section class="tracking-result">
+
+        <!-- ========== BLOC 1 : QR + CODE-BARRES + NUMÉRO ========== -->
+        <div class="tracking-codes-block">
+
+          <div class="codes-header">
+            <span class="eyebrow">TRACKING REFERENCE</span>
+            <h2 class="codes-number">{{ shipment.codeSuivi }}</h2>
+            <span class="status-badge" [attr.data-statut]="shipment.statut">
+              {{ libelleStatut(shipment.statut) }}
+            </span>
+          </div>
+
+          <div class="codes-visuals">
+
+            <div class="code-visual-item">
+              <div class="code-visual-box">
+                <canvas #qrCanvas></canvas>
+              </div>
+              <small>QR Code</small>
+            </div>
+
+            <div class="code-visual-item code-visual-item-wide">
+              <div class="code-visual-box">
+                <canvas #barcodeCanvas></canvas>
+              </div>
+              <small>Barcode</small>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========== BLOC 2 : VUE D'ENSEMBLE + PROGRESSION ========== -->
+        <div class="tracking-overview">
+
+          <div class="overview-heading">
+            <div>
+              <span class="eyebrow">TRACKING RESULT</span>
+              <h2>Shipment Overview</h2>
+            </div>
+          </div>
+
+          <ol class="progress-steps">
+            @for (statut of statuts; track statut) {
+              <li [class.done]="isStepDone(shipment.statut, statut)">
+                <span class="dot"></span>
+                <span class="label">{{ libelleStatut(statut) }}</span>
+              </li>
+            }
+          </ol>
+        </div>
+
+        <!-- ========== BLOC 3 : ITINÉRAIRE ========== -->
+        <div class="shipment-route">
+          <div class="route-end">
+            <div class="route-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <span class="route-caption">ORIGIN</span>
+            <h3>{{ shipment.villeOrigine || '—' }}</h3>
+            <p>{{ shipment.paysOrigine || '' }}</p>
+          </div>
+
+          <div class="route-connector" aria-hidden="true">
+            <span class="route-line"></span>
+            <span class="route-arrow">→</span>
+            <span class="route-line"></span>
+          </div>
+
+          <div class="route-end">
+            <div class="route-icon route-icon-dest">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 12l9-9 9 9"/>
+                <path d="M5 10v10h14V10"/>
+                <path d="M9 20v-6h6v6"/>
+              </svg>
+            </div>
+            <span class="route-caption">DESTINATION</span>
+            <h3>{{ shipment.villeDestination || '—' }}</h3>
+            <p>{{ shipment.paysDestination || '' }}</p>
+          </div>
+        </div>
+
+        <!-- ========== BLOC 4 : DÉTAILS ========== -->
+        <div class="result-details">
+          <div>
+            <span>Current Status</span>
+            <strong>{{ libelleStatut(shipment.statut) }}</strong>
+          </div>
+          <div>
+            <span>Current City</span>
+            <strong>{{ shipment.villeActuelle || '—' }}</strong>
+          </div>
+          <div>
+            <span>Current Location</span>
+            <strong>{{ shipment.lieuActuel || '—' }}</strong>
+          </div>
+          <div>
+            <span>Expected Delivery</span>
+            <strong>{{ formatDate(shipment.dateLivraisonPrevue) }}</strong>
+          </div>
+          <div>
+            <span>Carrier</span>
+            <strong>{{ shipment.transporteur || '—' }}</strong>
+          </div>
+          <div>
+            <span>Transport Mode</span>
+            <strong>{{ shipment.modeTransport || '—' }}</strong>
+          </div>
+          <div>
+            <span>Shipment Type</span>
+            <strong>{{ shipment.typeExpedition || '—' }}</strong>
+          </div>
+          <div>
+            <span>Weight</span>
+            <strong>{{ shipment.poidsReelTotal ?? shipment.poids ?? '—' }} kg</strong>
+          </div>
+          <div>
+            <span>Quantity</span>
+            <strong>{{ shipment.quantite ?? '—' }}</strong>
+          </div>
+          <div>
+            <span>Product</span>
+            <strong>{{ shipment.produit || '—' }}</strong>
+          </div>
+          <div>
+            <span>Sender</span>
+            <strong>{{ shipment.nomExpediteur || '—' }}</strong>
+          </div>
+          <div>
+            <span>Recipient</span>
+            <strong>{{ shipment.nomDestinataire || '—' }}</strong>
+          </div>
+        </div>
+
+        <!-- ========== BLOC 5 : HISTORIQUE ========== -->
+        <section class="history-section">
+          <div class="section-mini-heading">
+            <span class="eyebrow">TRACKING HISTORY</span>
+            <h3>All Events</h3>
+          </div>
+
+          @if (shipment.historique?.length) {
+            <div class="history-list">
+              @for (event of shipment.historique; track $index) {
+                <article class="history-item">
+                  <span class="history-dot"></span>
+                  <div>
+                    <strong>{{ libelleStatut(event.statut) }}</strong>
+                    <p>{{ event.description || 'Status updated' }}</p>
+                    <small>
+                      {{ event.date || '' }} {{ event.heure || '' }}
+                      @if (event.ville) { · {{ event.ville }} }
+                    </small>
+                    @if (event.lieu) { <p>{{ event.lieu }}</p> }
+                    @if (event.remarques) { <p>{{ event.remarques }}</p> }
+                  </div>
+                </article>
+              }
+            </div>
+          } @else {
+            <p class="empty">No tracking history available yet.</p>
+          }
+        </section>
+
+        @if (shipment.commentaires) {
+          <section class="history-section">
+            <div class="section-mini-heading">
+              <span class="eyebrow">ADDITIONAL INFO</span>
+              <h3>Notes</h3>
+            </div>
+            <p>{{ shipment.commentaires }}</p>
+          </section>
+        }
+
+        <!-- ========== BLOC 6 : CARTE (en bas) ========== -->
+        <section class="map-section">
+          <div class="section-mini-heading">
+            <span class="eyebrow">LIVE LOCATION</span>
+            <h3>Shipment Location</h3>
+          </div>
+
+          @if (shipment.latitude != null && shipment.longitude != null) {
+            <div #mapContainer class="map-container"></div>
+
+            <div class="map-footer">
+              <div class="map-info">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <div>
+                  <strong>{{ shipment.villeActuelle }}</strong>
+                  @if (shipment.lieuActuel) {
+                    <span> — {{ shipment.lieuActuel }}</span>
+                  }
+                </div>
+              </div>
+
+              <a class="map-link"
+                 [href]="googleMapsUrl(shipment.latitude, shipment.longitude)"
+                 target="_blank" rel="noopener noreferrer">
+                Open in Google Maps →
+              </a>
+            </div>
+          } @else {
+            <p class="map-empty">No GPS coordinates recorded for this shipment.</p>
+          }
+        </section>
+
+        <!-- ========== BOUTON IMPRIMER ========== -->
+        <div class="tracking-actions">
+          <button class="button button-outline"
+                  type="button"
+                  (click)="printTracking()">
+            Print Tracking Sheet
+          </button>
+        </div>
+
+      </section>
+    }
+  </div>
+</section>

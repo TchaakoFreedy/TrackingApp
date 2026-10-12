@@ -1,0 +1,462 @@
+/* ============================================================= */
+/* HERO                                                           */
+/* ============================================================= */
+.hero-home {
+  position: relative;
+  padding: 120px 0 100px;
+  color: #fff;
+  overflow: hidden;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  animation: slowZoom 25s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg,
+      rgba(12, 30, 51, 0.95) 0%,
+      rgba(23, 63, 108, 0.86) 50%,
+      rgba(35, 107, 167, 0.7) 100%);
+  z-index: 1;
+}
+
+@keyframes slowZoom {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.15); }
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ---------- TEXTE HERO ---------- */
+.hero-copy .eyebrow {
+  color: #d7a94b;
+}
+
+.hero-copy h1 {
+  color: #fff;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.08;
+  margin-bottom: 22px;
+  font-weight: 850;
+}
+.hero-copy h1 span {
+  display: block;
+  background: linear-gradient(90deg, #d7a94b, #f4d78e, #d7a94b);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShine 4s linear infinite;
+}
+@keyframes goldShine {
+  to { background-position: 200% center; }
+}
+
+.hero-copy p {
+  color: #cfd8e3;
+  font-size: 16.5px;
+  max-width: 520px;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 34px;
+}
+
+.hero-points {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  color: #cfd8e3;
+  font-size: 13px;
+}
+.hero-points span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #e3ecf5;
+}
+.hero-points svg {
+  width: 16px;
+  height: 16px;
+  color: #d7a94b;
+  flex-shrink: 0;
+}
+
+/* ---------- BOUTON OUTLINE CLAIR ---------- */
+.button-outline-light {
+  background: transparent;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+.button-outline-light:hover {
+  background: #fff;
+  color: var(--navy);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ============================================================= */
+/* VISUAL CARD                                                    */
+/* ============================================================= */
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 420px;
+}
+
+.visual-orbit {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(215, 169, 75, 0.22), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(35, 107, 167, 0.3), transparent 55%);
+  filter: blur(24px);
+  animation: orbitGlow 8s ease-in-out infinite alternate;
+}
+@keyframes orbitGlow {
+  from { transform: scale(1); opacity: 0.7; }
+  to   { transform: scale(1.15); opacity: 1; }
+}
+
+.visual-card {
+  position: relative;
+  width: 340px;
+  padding: 28px 26px;
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+  animation: floatCard 6s ease-in-out infinite;
+}
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+.visual-label {
+  font-size: 10px;
+  letter-spacing: 2.4px;
+  color: var(--gold);
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.visual-route {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.route-point {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(215, 169, 75, 0.25);
+}
+.route-point-end { background: #fff; }
+.route-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), #fff);
+  border-radius: 2px;
+}
+
+.visual-destinations {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #cfd8e3;
+  margin-bottom: 20px;
+}
+.visual-destinations span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.visual-destinations strong {
+  color: var(--gold);
+  font-size: 9px;
+  letter-spacing: 1.6px;
+}
+
+.visual-box {
+  padding: 22px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--navy);
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: 4px;
+  font-size: 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(215, 169, 75, 0.35);
+}
+
+.visual-shipping {
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #cfd8e3;
+}
+
+.visual-stamp {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.6px;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.3;
+  transform: rotate(8deg);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  animation: stampSpin 12s linear infinite;
+}
+@keyframes stampSpin {
+  from { transform: rotate(8deg); }
+  to   { transform: rotate(368deg); }
+}
+
+/* ============================================================= */
+/* TRUST STRIP                                                    */
+/* ============================================================= */
+.trust-strip {
+  background: var(--soft);
+  padding: 42px 0;
+  border-bottom: 1px solid var(--border);
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.trust-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 16px;
+  border-left: 3px solid var(--gold);
+  transition: transform .2s ease;
+}
+.trust-grid > div:hover {
+  transform: translateX(4px);
+}
+.trust-grid strong {
+  color: var(--navy-2);
+  font-size: 22px;
+  font-weight: 900;
+}
+.trust-grid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================= */
+/* SERVICES                                                       */
+/* ============================================================= */
+.services-section {
+  padding: 90px 0;
+}
+
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.service-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform .3s ease, box-shadow .3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 50px rgba(12, 30, 51, 0.14);
+  border-color: transparent;
+}
+
+/* Image de la carte service */
+.service-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: #e8edf3;
+}
+.service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .6s ease;
+}
+.service-card:hover .service-image img {
+  transform: scale(1.1);
+}
+.service-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 30, 51, 0) 40%,
+    rgba(12, 30, 51, 0.55) 100%
+  );
+  pointer-events: none;
+}
+.service-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 4px 10px;
+  background: rgba(215, 169, 75, 0.95);
+  color: #0c1e33;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  border-radius: 4px;
+}
+
+/* Corps de la carte */
+.service-body {
+  padding: 26px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.service-number {
+  display: inline-block;
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.service-body h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: var(--navy);
+}
+.service-body p {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.7;
+  flex: 1;
+  margin: 0 0 16px;
+}
+.service-body a {
+  display: inline-block;
+  color: var(--navy-2);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color .2s ease, transform .2s ease;
+}
+.service-body a:hover {
+  color: var(--gold-dark);
+  transform: translateX(4px);
+}
+
+/* ============================================================= */
+/* CTA                                                            */
+/* ============================================================= */
+.cta-section {
+  padding: 70px 0;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(215, 169, 75, 0.18), transparent 65%);
+  pointer-events: none;
+}
+.cta-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+.cta-content h2 {
+  color: #fff;
+  margin: 6px 0;
+  font-size: clamp(22px, 3vw, 32px);
+}
+.cta-content p {
+  color: #cfd8e3;
+  margin: 0;
+  max-width: 520px;
+}
+.cta-content .eyebrow {
+  color: var(--gold);
+}
+
+/* ============================================================= */
+/* RESPONSIVE                                                     */
+/* ============================================================= */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-visual { min-height: 320px; }
+  .visual-card { width: 300px; }
+  .trust-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .hero-home { padding: 70px 0 60px; }
+  .hero-copy h1 { font-size: 28px; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .service-image { height: 170px; }
+}

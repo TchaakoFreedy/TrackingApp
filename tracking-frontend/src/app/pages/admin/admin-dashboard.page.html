@@ -1,0 +1,166 @@
+<section class="admin-dashboard">
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="admin-header">
+      <div class="admin-header-title">
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1>Shipment Management</h1>
+        <p>Create, track and update your shipments.</p>
+      </div>
+
+      <div class="admin-header-actions">
+        <a class="button button-outline" routerLink="/admin/messages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16v12H5.17L4 17.17z"/>
+            <path d="M8 9h8M8 13h5"/>
+          </svg>
+          Messages
+        </a>
+        <a class="button button-primary" routerLink="/admin/colis/nouveau">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          New Shipment
+        </a>
+      </div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="admin-stats">
+      <div class="admin-stat">
+        <span class="admin-stat-value">{{ colis.length }}</span>
+        <span class="admin-stat-label">Total Shipments</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-value">
+          {{ countByStatut('EN_TRANSIT') }}
+        </span>
+        <span class="admin-stat-label">In Transit</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-value">
+          {{ countByStatut('LIVRE') }}
+        </span>
+        <span class="admin-stat-label">Delivered</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-value">
+          {{ countByStatut('EN_ATTENTE') }}
+        </span>
+        <span class="admin-stat-label">Pending</span>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="admin-toolbar">
+      <div class="admin-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          placeholder="Search by code, name, city…"
+          [(ngModel)]="filtres"
+          name="filtres" />
+      </div>
+
+      <select [(ngModel)]="statutFiltre" name="statutFiltre">
+        @for (s of statuts; track s) {
+          <option [ngValue]="s">
+            {{ s ? libelleStatut(s) : 'All statuses' }}
+          </option>
+        }
+      </select>
+
+      <button class="button button-outline" type="button" (click)="charger()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- ÉTATS -->
+    @if (chargement) {
+      <div class="admin-loading">
+        <span class="loading-spinner"></span>
+        <p>Loading shipments…</p>
+      </div>
+    }
+
+    @if (erreur) {
+      <div class="alert-error">{{ erreur }}</div>
+    }
+
+    @if (!chargement && colisFiltres.length === 0) {
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 7l-8-4-8 4 8 4 8-4z"/>
+          <path d="M4 7v10l8 4 8-4V7"/>
+        </svg>
+        <p>No shipments match your search.</p>
+      </div>
+    }
+
+    <!-- TABLE -->
+    @if (colisFiltres.length) {
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Tracking Code</th>
+              <th>Sender</th>
+              <th>Recipient</th>
+              <th>Route</th>
+              <th>Status</th>
+              <th class="align-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of colisFiltres; track c.id) {
+              <tr>
+                <td>
+                  <span class="code-cell">{{ c.codeSuivi }}</span>
+                </td>
+                <td>{{ c.nomExpediteur }}</td>
+                <td>{{ c.nomDestinataire }}</td>
+                <td>
+                  <span class="route-cell">
+                    {{ c.villeOrigine }}
+                    <span class="route-arrow">→</span>
+                    {{ c.villeDestination }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status-badge" [attr.data-statut]="c.statut">
+                    {{ libelleStatut(c.statut) }}
+                  </span>
+                </td>
+                <td class="actions">
+                  <a class="link" [routerLink]="['/admin/colis', c.id]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    View
+                  </a>
+                  <button class="link danger" type="button" (click)="supprimer(c)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                      <path d="M10 11v6M14 11v6"/>
+                    </svg>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

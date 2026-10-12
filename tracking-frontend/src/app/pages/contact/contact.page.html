@@ -1,0 +1,105 @@
+<!-- ============================================================= -->
+<!-- HERO                                                           -->
+<!-- ============================================================= -->
+<section class="contact-hero">
+  <div class="contact-hero-bg"
+       style="background-image:url('https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1920&q=80')">
+  </div>
+  <div class="contact-hero-overlay"></div>
+
+  <div class="container contact-hero-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>/</span>
+      <span class="current">Contact</span>
+    </nav>
+
+    <span class="eyebrow">CONTACT US</span>
+    <h1>We're Here to Help</h1>
+    <p>Have a question about a shipment or one of our services? Send us a message.</p>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- CONTACT GRID                                                   -->
+<!-- ============================================================= -->
+<section class="content-section">
+  <div class="container contact-grid">
+
+    <!-- LEFT COLUMN : TEXTE -->
+    <div class="contact-information" appReveal>
+      <span class="eyebrow">GET IN TOUCH</span>
+      <h2>Let's Talk About Your Shipment</h2>
+      <p>
+        Use the contact form to describe your question.
+        Include your tracking reference when relevant.
+      </p>
+    </div>
+
+    <!-- RIGHT COLUMN : FORM -->
+    <form class="contact-form" (ngSubmit)="envoyerMessage()" appReveal>
+      <h2>Send Us a Message</h2>
+      <p class="form-intro">
+        Fill out the form and we'll get back to you as soon as possible.
+      </p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="contact-name">Full Name *</label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            [(ngModel)]="nom"
+            required
+            autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="contact-email">Email Address *</label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            [(ngModel)]="email"
+            required
+            autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contact-reference">Tracking Number (optional)</label>
+        <input
+          id="contact-reference"
+          name="reference"
+          type="text"
+          [(ngModel)]="reference" />
+      </div>
+
+      <div class="form-group">
+        <label for="contact-message">Message *</label>
+        <textarea
+          id="contact-message"
+          name="message"
+          [(ngModel)]="message"
+          required
+          rows="6"></textarea>
+      </div>
+
+      <button
+        class="button button-primary contact-submit"
+        type="submit"
+        [disabled]="chargement">
+        {{ chargement ? 'Sending…' : 'Send Message' }}
+      </button>
+
+      @if (confirmation) {
+        <p class="form-notice" role="status">{{ confirmation }}</p>
+      }
+      @if (erreur) {
+        <p class="alert-error" role="alert">{{ erreur }}</p>
+      }
+    </form>
+
+  </div>
+</section>
