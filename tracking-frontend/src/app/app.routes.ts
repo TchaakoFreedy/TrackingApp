@@ -41,6 +41,16 @@ export const routes: Routes = [
       )
   },
   {
+  path: 'admin/profile',
+  loadComponent: () =>
+    import('./pages/profile/profile.page').then(m => m.ProfilePage)
+},
+{
+  path: 'admin/users',
+  loadComponent: () =>
+    import('./pages/admin-users/admin-users.page').then(m => m.AdminUsersPage)
+},
+  {
     path: 'admin/colis/nouveau',
     canActivate: [adminGuard],
     loadComponent: () =>

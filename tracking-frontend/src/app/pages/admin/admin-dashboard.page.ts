@@ -19,7 +19,7 @@ import { ColisSuivi } from '../../core/services/tracking.service';
 })
 export class AdminDashboardPage implements OnInit {
   private readonly admin = inject(AdminService);
-  private readonly cdr = inject(ChangeDetectorRef);   // ← AJOUT
+  private readonly cdr = inject(ChangeDetectorRef);
 
   colis: ColisSuivi[] = [];
   filtres = '';
@@ -27,17 +27,18 @@ export class AdminDashboardPage implements OnInit {
   chargement = false;
   erreur = '';
 
+  // ✅ Statuts alignés avec le reste de l'app (anglais)
   readonly statuts = [
     '',
-    'EN_ATTENTE',
-    'RECUPERE',
-    'EN_TRANSIT',
-    'ARRIVE_A_DESTINATION',
-    'EN_LIVRAISON',
-    'LIVRE',
-    'ECHEC_LIVRAISON',
-    'RETOURNE',
-    'ANNULE'
+    'PENDING',
+    'PICKED_UP',
+    'IN_TRANSIT',
+    'AT_DESTINATION',
+    'OUT_FOR_DELIVERY',
+    'DELIVERED',
+    'DELIVERY_FAILED',
+    'RETURNED',
+    'CANCELLED'
   ];
 
   ngOnInit(): void {
@@ -47,25 +48,25 @@ export class AdminDashboardPage implements OnInit {
   charger(): void {
     this.chargement = true;
     this.erreur = '';
-    this.cdr.detectChanges();   // ← AJOUT
+    this.cdr.detectChanges();
 
     this.admin.lister().subscribe({
       next: (data: ColisSuivi[]) => {
         this.colis = data ?? [];
         this.chargement = false;
-        this.cdr.detectChanges();   // ← AJOUT (le plus important)
+        this.cdr.detectChanges();
       },
       error: () => {
-        this.erreur = 'Impossible de charger les colis.';
+        this.erreur = 'Unable to load shipments.';
         this.chargement = false;
-        this.cdr.detectChanges();   // ← AJOUT
+        this.cdr.detectChanges();
       }
     });
   }
 
   countByStatut(statut: string): number {
-  return this.colis.filter((c) => c.statut === statut).length;
-}
+    return this.colis.filter((c) => c.statut === statut).length;
+  }
 
   get colisFiltres(): ColisSuivi[] {
     const q = this.filtres.trim().toLowerCase();
@@ -84,15 +85,15 @@ export class AdminDashboardPage implements OnInit {
 
   libelleStatut(statut: string | undefined): string {
     const libelles: Record<string, string> = {
-      EN_ATTENTE: 'En attente',
-      RECUPERE: 'Récupéré',
-      EN_TRANSIT: 'En transit',
-      ARRIVE_A_DESTINATION: 'Arrivé',
-      EN_LIVRAISON: 'En livraison',
-      LIVRE: 'Livré',
-      ECHEC_LIVRAISON: 'Échec',
-      RETOURNE: 'Retourné',
-      ANNULE: 'Annulé'
+      PENDING:            'Pending',
+      PICKED_UP:          'Picked Up',
+      IN_TRANSIT:         'In Transit',
+      AT_DESTINATION:     'At Destination',
+      OUT_FOR_DELIVERY:   'Out for Delivery',
+      DELIVERED:          'Delivered',
+      DELIVERY_FAILED:    'Delivery Failed',
+      RETURNED:           'Returned',
+      CANCELLED:          'Cancelled'
     };
     if (!statut) return '—';
     return libelles[statut] ?? statut.replaceAll('_', ' ');
@@ -100,13 +101,13 @@ export class AdminDashboardPage implements OnInit {
 
   supprimer(c: ColisSuivi): void {
     if (!c.id) return;
-    if (!confirm(`Supprimer définitivement le colis ${c.codeSuivi} ?`)) return;
+    if (!confirm(`Permanently delete shipment ${c.codeSuivi}?`)) return;
 
     this.admin.supprimer(c.id).subscribe({
       next: () => this.charger(),
       error: () => {
-        this.erreur = 'Erreur lors de la suppression.';
-        this.cdr.detectChanges();   // ← AJOUT
+        this.erreur = 'Error while deleting the shipment.';
+        this.cdr.detectChanges();
       }
     });
   }

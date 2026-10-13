@@ -252,3 +252,31 @@ textarea {
   .status-card { padding: 26px 22px; }
   .form-header h1 { font-size: 26px; }
 }
+/* Ajouter à la fin du fichier admin-colis-form.page.scss */
+
+.edit-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+
+.edit-tab {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-tab:hover { color: var(--navy-2); }
+
+.edit-tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}

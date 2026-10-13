@@ -150,18 +150,19 @@
         </div>
 
         <!-- ========== BLOC 4 : DÉTAILS ========== -->
+        <!-- ✅ Current City et Current Location retirés — remplacés par Origin/Destination Address -->
         <div class="result-details">
           <div>
             <span>Current Status</span>
             <strong>{{ libelleStatut(shipment.statut) }}</strong>
           </div>
           <div>
-            <span>Current City</span>
-            <strong>{{ shipment.villeActuelle || '—' }}</strong>
+            <span>Origin Address</span>
+            <strong>{{ shipment.adresseOrigine || shipment.villeOrigine || '—' }}</strong>
           </div>
           <div>
-            <span>Current Location</span>
-            <strong>{{ shipment.lieuActuel || '—' }}</strong>
+            <span>Destination Address</span>
+            <strong>{{ shipment.adresseDestination || shipment.villeDestination || '—' }}</strong>
           </div>
           <div>
             <span>Expected Delivery</span>
@@ -241,16 +242,39 @@
           </section>
         }
 
-        <!-- ========== BLOC 6 : CARTE (en bas) ========== -->
+        <!-- ========== BLOC 6 : CARTE (avec toggle satellite) ========== -->
         <section class="map-section">
-          <div class="section-mini-heading">
-            <span class="eyebrow">LIVE LOCATION</span>
-            <h3>Shipment Location</h3>
+
+          <div class="map-heading-row">
+            <div class="section-mini-heading">
+              <span class="eyebrow">LIVE LOCATION</span>
+              <h3>Shipment Location</h3>
+            </div>
+
+            @if (shipment.latitude != null && shipment.longitude != null) {
+              <button class="map-toggle"
+                      type="button"
+                      (click)="toggleMapMode()">
+                @if (mapMode === 'streets') {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/>
+                  </svg>
+                  Satellite view
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                  </svg>
+                  Streets view
+                }
+              </button>
+            }
           </div>
 
           @if (shipment.latitude != null && shipment.longitude != null) {
             <div #mapContainer class="map-container"></div>
 
+            <!-- ✅ Footer map SANS villeActuelle / lieuActuel — uniquement coordonnées GPS -->
             <div class="map-footer">
               <div class="map-info">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -258,10 +282,8 @@
                   <circle cx="12" cy="10" r="3"/>
                 </svg>
                 <div>
-                  <strong>{{ shipment.villeActuelle }}</strong>
-                  @if (shipment.lieuActuel) {
-                    <span> — {{ shipment.lieuActuel }}</span>
-                  }
+                  <strong>GPS coordinates</strong>
+                  <span> — {{ shipment.latitude }}, {{ shipment.longitude }}</span>
                 </div>
               </div>
 

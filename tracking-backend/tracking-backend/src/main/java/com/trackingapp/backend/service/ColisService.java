@@ -392,4 +392,85 @@ public class ColisService {
     private String valeurParDefaut(String valeur, String defaut) {
         return valeur == null || valeur.isBlank() ? defaut : valeur;
     }
+    // Ajoutez cette méthode dans ColisService.java
+
+    public Colis mettreAJourComplet(String id, Colis payload) {
+        if (payload == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Shipment data is required."
+            );
+        }
+
+        Colis colis = trouverParId(id);
+
+        // --- Expéditeur ---
+        colis.nomExpediteur = payload.nomExpediteur != null ? payload.nomExpediteur : colis.nomExpediteur;
+        colis.telephoneExpediteur = payload.telephoneExpediteur;
+        colis.emailExpediteur = payload.emailExpediteur;
+        colis.adresseExpediteur = payload.adresseExpediteur;
+        colis.villeExpediteur = payload.villeExpediteur;
+        colis.paysExpediteur = payload.paysExpediteur;
+
+        // --- Destinataire ---
+        colis.nomDestinataire = payload.nomDestinataire != null ? payload.nomDestinataire : colis.nomDestinataire;
+        colis.telephoneDestinataire = payload.telephoneDestinataire;
+        colis.emailDestinataire = payload.emailDestinataire;
+        colis.adresseDestinataire = payload.adresseDestinataire;
+        colis.villeDestinataire = payload.villeDestinataire;
+        colis.paysDestinataire = payload.paysDestinataire;
+
+        // --- Origine / Destination ---
+        colis.adresseOrigine = payload.adresseOrigine;
+        colis.villeOrigine = payload.villeOrigine != null ? payload.villeOrigine : colis.villeOrigine;
+        colis.paysOrigine = payload.paysOrigine;
+        colis.adresseDestination = payload.adresseDestination;
+        colis.villeDestination = payload.villeDestination != null ? payload.villeDestination : colis.villeDestination;
+        colis.paysDestination = payload.paysDestination;
+
+        // --- Transport ---
+        colis.transporteur = payload.transporteur;
+        colis.typeExpedition = payload.typeExpedition;
+        colis.modeTransport = payload.modeTransport;
+        colis.referenceTransporteur = payload.referenceTransporteur;
+
+        // --- Marchandise ---
+        colis.description = payload.description;
+        colis.produit = payload.produit;
+        colis.quantite = payload.quantite;
+        colis.poids = payload.poids;
+
+        // --- Facturation ---
+        colis.modePaiement = payload.modePaiement;
+        colis.fraisTransport = payload.fraisTransport;
+        colis.devise = payload.devise;
+
+        // --- Dates ---
+        colis.dateLivraisonPrevue = payload.dateLivraisonPrevue;
+        colis.dateRamassage = payload.dateRamassage;
+        colis.heureRamassage = payload.heureRamassage;
+        colis.dateDepart = payload.dateDepart;
+        colis.heureDepart = payload.heureDepart;
+        colis.dateLivraisonEffective = payload.dateLivraisonEffective;
+        colis.heureLivraisonEffective = payload.heureLivraisonEffective;
+
+        // --- Localisation actuelle ---
+        colis.villeActuelle = payload.villeActuelle;
+        colis.lieuActuel = payload.lieuActuel;
+        colis.latitude = payload.latitude;
+        colis.longitude = payload.longitude;
+
+        // --- Complémentaires ---
+        colis.commentaires = payload.commentaires;
+
+        // --- Colis physiques ---
+        if (payload.packages != null) {
+            colis.packages = payload.packages;
+            verifierPieces(colis);
+            calculerTotaux(colis);
+        }
+
+        colis.dateModification = Instant.now();
+
+        return colisRepository.save(colis);
+    }
 }

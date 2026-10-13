@@ -1,15 +1,18 @@
+package com.trackingapp.backend.config;
 
-        package com.trackingapp.backend.config;
-
+import com.trackingapp.backend.repository.UtilisateurRepository;
+import com.trackingapp.backend.service.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,12 +24,24 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtService jwtService;
+    private final UtilisateurRepository utilisateurRepository;
 
     public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter
+            JwtService jwtService,
+            UtilisateurRepository utilisateurRepository
     ) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.jwtService = jwtService;
+        this.utilisateurRepository = utilisateurRepository;
+    }
+
+    // =============================================================
+    // Le filtre est créé ici, PAS comme @Component
+    // → il ne sera PAS auto-enregistré dans la chaîne des servlets
+    // =============================================================
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtService, utilisateurRepository);
     }
 
     @Bean
@@ -34,65 +49,76 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Pour renvoyer 401 (au lieu de 403) quand pas de token valide
+    @Bean
+    public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return (request, response, authException) -> {
+            System.out.println("[SECURITY] 401 sur " + request.getRequestURI()
+                    + " → " + authException.getMessage());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"Unauthorized\"}");
+        };
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtAuthenticationFilter
     ) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // Activation de CORS
                 .cors(Customizer.withDefaults())
-
-                // Désactivation des mécanismes d'authentification par défaut
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                // API sans session HTTP
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
 
-                // Règles d'autorisation
+                // ⬇️ 401 au lieu de 403 quand non authentifié
+                .exceptionHandling(ex ->
+                        ex.authenticationEntryPoint(jwtAuthenticationEntryPoint())
+                )
+
                 .authorizeHttpRequests(authorize -> authorize
 
-                        // Autoriser les requêtes de pré-vérification CORS
                         .requestMatchers(
                                 HttpMethod.OPTIONS,
                                 "/**"
                         ).permitAll()
 
-                        // Connexion publique
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/auth/login"
                         ).permitAll()
 
-                        // Suivi public des colis
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/tracking/**"
                         ).permitAll()
 
-                        // Formulaire de contact public
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/contact"
                         ).permitAll()
 
-                        // Routes administrateur protégées
-                        .requestMatchers(
-                                "/api/admin/**"
-                        ).hasRole("ADMIN")
+                        // Profil — authentifié
+                        .requestMatchers("/api/users/me").authenticated()
 
-                        // Toutes les autres routes nécessitent une authentification
+                        // Gestion utilisateurs — ADMIN
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+                        // Admin colis — ADMIN
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
 
-                // Filtre JWT personnalisé
+                // ⬇️ Utilise le bean, PAS un @Component auto-enregistré
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
@@ -106,33 +132,21 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        // Origines autorisées
         config.setAllowedOrigins(List.of(
                 "https://starline-xi.vercel.app",
                 "http://localhost:4200",
                 "http://localhost:8080"
         ));
 
-        // Méthodes HTTP autorisées
         config.setAllowedMethods(List.of(
-                "GET",
-                "POST",
-                "PUT",
-                "PATCH",
-                "DELETE",
-                "OPTIONS"
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
         ));
 
-        // En-têtes autorisés, dont Authorization
         config.setAllowedHeaders(List.of("*"));
-
-        // Autoriser les requêtes avec des informations d'identification
         config.setAllowCredentials(true);
 
-        // Appliquer CORS à toutes les routes
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
-
         source.registerCorsConfiguration("/**", config);
 
         return source;

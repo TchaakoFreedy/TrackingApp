@@ -1,0 +1,97 @@
+<section class="profile-page">
+  <div class="container">
+
+    <div class="form-header">
+      <span class="eyebrow">ACCOUNT</span>
+      <h1>My Profile</h1>
+      <p>Manage your personal information and password.</p>
+    </div>
+
+    @if (chargement) {
+      <div class="admin-loading">
+        <span class="loading-spinner"></span>
+        <p>Loading…</p>
+      </div>
+    }
+
+    @if (user) {
+      <div class="profile-grid">
+
+        <aside class="profile-side">
+          <div class="avatar">
+            {{ (user.nom || user.email).charAt(0).toUpperCase() }}
+          </div>
+          <h2>{{ user.nom || '—' }}</h2>
+          <p>{{ user.email }}</p>
+          <span class="role-badge">{{ user.role }}</span>
+
+          <ul class="profile-meta">
+            <li>
+              <span>Member since</span>
+              <strong>{{ formatDate(user.dateCreation) }}</strong>
+            </li>
+            <li>
+              <span>Last login</span>
+              <strong>{{ formatDate(user.dateDerniereConnexion) }}</strong>
+            </li>
+            <li>
+              <span>Status</span>
+              <strong>{{ user.actif ? 'Active' : 'Disabled' }}</strong>
+            </li>
+          </ul>
+
+          <a class="button button-outline" routerLink="/admin/colis">
+            ← Back to shipments
+          </a>
+        </aside>
+
+        <form class="profile-form" (ngSubmit)="enregistrer()">
+
+          <div class="form-section">
+            <h3>Personal information</h3>
+            <div class="form-grid">
+              <label>
+                Full Name *
+                <input name="nom" [(ngModel)]="model.nom" required />
+              </label>
+              <label>
+                Email *
+                <input type="email" name="email" [(ngModel)]="model.email" required />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Change password</h3>
+            <p class="hint">Leave blank to keep your current password.</p>
+            <div class="form-grid">
+              <label>
+                New password
+                <input type="password"
+                       name="nouveauMotDePasse"
+                       [(ngModel)]="model.nouveauMotDePasse"
+                       autocomplete="new-password" />
+              </label>
+              <label>
+                Current password
+                <input type="password"
+                       name="motDePasseActuel"
+                       [(ngModel)]="model.motDePasseActuel"
+                       autocomplete="current-password" />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="button button-primary" type="submit" [disabled]="chargement">
+              Save Changes
+            </button>
+          </div>
+
+          @if (message) { <p class="form-notice">{{ message }}</p> }
+          @if (erreur)  { <p class="alert-error">{{ erreur }}</p> }
+        </form>
+      </div>
+    }
+  </div>
+</section>

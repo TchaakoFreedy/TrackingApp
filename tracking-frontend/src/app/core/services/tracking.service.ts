@@ -9,6 +9,8 @@ export interface HistoriqueColis {
   heure?: string;
   ville?: string;
   lieu?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   misAJourPar?: string;
   remarques?: string;
   dateEnregistrement?: string;
@@ -27,26 +29,57 @@ export interface PackageColis {
 }
 
 export interface ColisSuivi {
-   id?: string; 
+  id?: string;
   codeSuivi: string;
   statut: string;
+
+  // ====== Expéditeur ======
   nomExpediteur?: string;
+  telephoneExpediteur?: string;
+  emailExpediteur?: string;
+  adresseExpediteur?: string;
+  villeExpediteur?: string;
+  paysExpediteur?: string;
+
+  // ====== Destinataire ======
   nomDestinataire?: string;
+  telephoneDestinataire?: string;
+  emailDestinataire?: string;
+  adresseDestinataire?: string;
+  villeDestinataire?: string;
+  paysDestinataire?: string;
+
+  // ====== Origine / Destination ======
+  adresseOrigine?: string;
   villeOrigine?: string;
   paysOrigine?: string;
+  adresseDestination?: string;
   villeDestination?: string;
   paysDestination?: string;
+
+  // ====== Transport ======
   transporteur?: string;
   typeExpedition?: string;
   modeTransport?: string;
   referenceTransporteur?: string;
+
+  // ====== Marchandise ======
   description?: string;
   produit?: string;
   quantite?: number;
   poids?: number;
+
+  // ====== Facturation ======
+  modePaiement?: string;
+  fraisTransport?: number;
+  devise?: string;
+
+  // ====== Totaux calculés ======
   poidsReelTotal?: number;
   poidsVolumetriqueTotal?: number;
   volumeTotal?: number;
+
+  // ====== Dates & heures ======
   dateLivraisonPrevue?: string;
   dateRamassage?: string;
   heureRamassage?: string;
@@ -54,15 +87,22 @@ export interface ColisSuivi {
   heureDepart?: string;
   dateLivraisonEffective?: string;
   heureLivraisonEffective?: string;
+
+  // ====== Statut actuel / localisation ======
   villeActuelle?: string;
   lieuActuel?: string;
   latitude?: number | null;
   longitude?: number | null;
+
+  // ====== Complémentaires ======
   commentaires?: string;
-  packages?: PackageColis[];
-  historique?: HistoriqueColis[];
+  creePar?: string;
   dateCreation?: string;
   dateModification?: string;
+
+  // ====== Colis physiques & historique ======
+  packages?: PackageColis[];
+  historique?: HistoriqueColis[];
 }
 
 @Injectable({

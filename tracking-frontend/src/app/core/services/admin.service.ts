@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { ColisSuivi } from './tracking.service';
 
 export interface ColisAdminPayload {
-  nomExpediteur: string;
+  nomExpediteur?: string;
   telephoneExpediteur?: string;
   emailExpediteur?: string;
   adresseExpediteur?: string;
   villeExpediteur?: string;
   paysExpediteur?: string;
 
-  nomDestinataire: string;
+  nomDestinataire?: string;
   telephoneDestinataire?: string;
   emailDestinataire?: string;
   adresseDestinataire?: string;
@@ -19,10 +19,10 @@ export interface ColisAdminPayload {
   paysDestinataire?: string;
 
   adresseOrigine?: string;
-  villeOrigine: string;
+  villeOrigine?: string;
   paysOrigine?: string;
   adresseDestination?: string;
-  villeDestination: string;
+  villeDestination?: string;
   paysDestination?: string;
 
   transporteur?: string;
@@ -40,12 +40,19 @@ export interface ColisAdminPayload {
   devise?: string;
 
   dateLivraisonPrevue?: string;
+  dateRamassage?: string;
+  heureRamassage?: string;
+  dateDepart?: string;
+  heureDepart?: string;
+  dateLivraisonEffective?: string;
+  heureLivraisonEffective?: string;
+
   commentaires?: string;
 
   villeActuelle?: string;
   lieuActuel?: string;
-  latitude?: number;
-  longitude?: number;
+  latitude?: number | null;
+  longitude?: number | null;
 
   codeSuivi?: string;
   statut?: string;
@@ -77,6 +84,11 @@ export class AdminService {
 
   creer(colis: ColisAdminPayload): Observable<ColisSuivi> {
     return this.http.post<ColisSuivi>(this.base, colis);
+  }
+
+  // ✅ NOUVEAU : mise à jour complète
+  mettreAJourComplet(id: string, payload: ColisAdminPayload): Observable<ColisSuivi> {
+    return this.http.put<ColisSuivi>(`${this.base}/${id}`, payload);
   }
 
   majStatut(id: string, payload: UpdateStatutPayload): Observable<ColisSuivi> {

@@ -29,6 +29,7 @@ export class AdminColisFormPage implements OnInit {
 
   id?: string;
   mode: 'creation' | 'edition' = 'creation';
+  editTab: 'details' | 'status' = 'details';
 
   model: ColisAdminPayload = this.vide();
 
@@ -83,34 +84,69 @@ export class AdminColisFormPage implements OnInit {
     this.admin.detail(id).subscribe({
       next: (c: ColisSuivi) => {
         this.model = {
+          // Sender
           nomExpediteur: c.nomExpediteur ?? '',
+          telephoneExpediteur: c.telephoneExpediteur ?? '',
+          emailExpediteur: c.emailExpediteur ?? '',
+          adresseExpediteur: c.adresseExpediteur ?? '',
+          villeExpediteur: c.villeExpediteur ?? '',
+          paysExpediteur: c.paysExpediteur ?? '',
+
+          // Recipient
           nomDestinataire: c.nomDestinataire ?? '',
+          telephoneDestinataire: c.telephoneDestinataire ?? '',
+          emailDestinataire: c.emailDestinataire ?? '',
+          adresseDestinataire: c.adresseDestinataire ?? '',
+          villeDestinataire: c.villeDestinataire ?? '',
+          paysDestinataire: c.paysDestinataire ?? '',
+
+          // Origin / Destination
+          adresseOrigine: c.adresseOrigine ?? '',
           villeOrigine: c.villeOrigine ?? '',
           paysOrigine: c.paysOrigine ?? '',
+          adresseDestination: c.adresseDestination ?? '',
           villeDestination: c.villeDestination ?? '',
           paysDestination: c.paysDestination ?? '',
-          transporteur: c.transporteur,
-          typeExpedition: c.typeExpedition,
-          modeTransport: c.modeTransport,
-          produit: c.produit,
-          quantite: c.quantite,
-          poids: c.poids,
-          description: c.description,
-          dateLivraisonPrevue: c.dateLivraisonPrevue,
-          commentaires: c.commentaires,
-          villeActuelle: c.villeActuelle,
-          lieuActuel: c.lieuActuel,
+
+          // Transport
+          transporteur: c.transporteur ?? '',
+          typeExpedition: c.typeExpedition ?? '',
+          modeTransport: c.modeTransport ?? '',
+          referenceTransporteur: c.referenceTransporteur ?? '',
+
+          // Goods
+          description: c.description ?? '',
+          produit: c.produit ?? '',
+          quantite: c.quantite ?? undefined,
+          poids: c.poids ?? undefined,
+
+          // Dates
+          dateLivraisonPrevue: c.dateLivraisonPrevue ?? '',
+          dateRamassage: c.dateRamassage ?? '',
+          heureRamassage: c.heureRamassage ?? '',
+          dateDepart: c.dateDepart ?? '',
+          heureDepart: c.heureDepart ?? '',
+          dateLivraisonEffective: c.dateLivraisonEffective ?? '',
+          heureLivraisonEffective: c.heureLivraisonEffective ?? '',
+
+          // Localisation (lat/long uniquement)
           latitude: c.latitude ?? undefined,
           longitude: c.longitude ?? undefined,
+
+          // Notes
+          commentaires: c.commentaires ?? '',
+
+          // Meta
           codeSuivi: c.codeSuivi,
           statut: c.statut
         };
 
+        // ✅ On garde villeActuelle/lieuActuel dans statutMaj car ils alimentent
+        // l'historique du tracking (event.ville / event.lieu)
         this.statutMaj.villeActuelle = c.villeActuelle ?? '';
         this.statutMaj.lieuActuel = c.lieuActuel ?? '';
         this.statutMaj.latitude = c.latitude ?? undefined;
         this.statutMaj.longitude = c.longitude ?? undefined;
-
         this.statutMaj.statut = c.statut ?? 'IN_TRANSIT';
 
         this.chargement = false;
@@ -161,7 +197,39 @@ export class AdminColisFormPage implements OnInit {
     });
   }
 
-  // ✅ MÉTHODE AJOUTÉE ICI
+  enregistrerModifications(): void {
+    if (!this.id) return;
+
+    this.message = '';
+    this.erreur = '';
+
+    if (
+      !this.model.nomExpediteur?.trim() ||
+      !this.model.nomDestinataire?.trim()
+    ) {
+      this.erreur = 'Sender and recipient names are required.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.chargement = true;
+    this.cdr.detectChanges();
+
+    this.admin.mettreAJourComplet(this.id, this.model).subscribe({
+      next: () => {
+        this.message = 'Shipment updated successfully.';
+        this.chargement = false;
+        this.cdr.detectChanges();
+        if (this.id) this.chargerDetail(this.id);
+      },
+      error: (err) => {
+        this.erreur = err?.error?.message || 'Error while updating the shipment.';
+        this.chargement = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   libelleStatut(statut: string | undefined): string {
     const libelles: Record<string, string> = {
       PENDING:            'Pending',

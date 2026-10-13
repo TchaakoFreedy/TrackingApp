@@ -703,3 +703,40 @@
   }
   .codes-number { color: #000 !important; }
 }
+/* Ajoutez ces règles à la fin de votre fichier track.page.scss */
+
+.map-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.map-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: #fff;
+  border: 1px solid #d6dde7;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.map-toggle svg {
+  width: 16px;
+  height: 16px;
+  color: var(--gold-dark);
+}
+.map-toggle:hover {
+  border-color: var(--gold);
+  background: #fffdf6;
+  color: var(--navy);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(12, 30, 51, 0.08);
+}

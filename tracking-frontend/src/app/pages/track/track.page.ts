@@ -40,7 +40,9 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   chargement = false;
   erreur = '';
 
-  // ✅ NOUVEAUX STATUTS EN ANGLAIS
+  // Mode de la carte : rues ou satellite
+  mapMode: 'streets' | 'satellite' = 'streets';
+
   readonly statuts = [
     'PENDING',
     'PICKED_UP',
@@ -53,9 +55,11 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   private map?: L.Map;
   private marker?: L.Marker;
   private accuracyCircle?: L.Circle;
+  private streetsLayer?: L.TileLayer;
+  private satelliteLayer?: L.TileLayer;
 
   ngAfterViewInit(): void {
-    // Nothing until a shipment is loaded
+    // Rien tant qu'aucun colis n'est chargé
   }
 
   ngOnDestroy(): void {
@@ -142,14 +146,14 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   }
 
   // =============================================================
-  // INTERACTIVE MAP
+  // CARTE
   // =============================================================
   private renderMap(): void {
     if (!this.colis) return;
 
     const el = this.mapContainer?.nativeElement;
     if (!el) {
-      console.warn('[MAP] #mapContainer not found');
+      console.warn('[MAP] #mapContainer introuvable');
       return;
     }
 
@@ -164,7 +168,7 @@ export class TrackPage implements AfterViewInit, OnDestroy {
       return;
     }
 
-    // --- Create the map if it doesn't exist yet ---
+    // Création de la carte si elle n'existe pas encore
     if (!this.map) {
       this.map = L.map(el, {
         center: [lat, lng],
@@ -178,19 +182,35 @@ export class TrackPage implements AfterViewInit, OnDestroy {
         touchZoom: true
       });
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap'
-      }).addTo(this.map);
+      // Couche "streets"
+      this.streetsLayer = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap'
+        }
+      );
+
+      // Couche "satellite" (Esri World Imagery)
+      this.satelliteLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+          maxZoom: 19,
+          attribution:
+            'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics'
+        }
+      );
+
+      this.applyMapMode();
     } else {
-      // Map already exists: fly to the new position
+      // La carte existe déjà : on vole vers la nouvelle position
       this.map.flyTo([lat, lng], 13, {
         duration: 1.5,
         easeLinearity: 0.25
       });
     }
 
-    // --- Custom icon with pulse ---
+    // Icône personnalisée avec pulsation
     const icon = L.divIcon({
       className: 'aurex-marker',
       html: `
@@ -204,7 +224,7 @@ export class TrackPage implements AfterViewInit, OnDestroy {
       popupAnchor: [0, -22]
     });
 
-    // --- Marker ---
+    // Marqueur
     if (this.marker) {
       this.marker.setLatLng([lat, lng]).setIcon(icon);
     } else {
@@ -215,15 +235,10 @@ export class TrackPage implements AfterViewInit, OnDestroy {
       }).addTo(this.map!);
     }
 
-    // --- Popup ---
-    const ville = this.colis.villeActuelle ?? '';
-    const lieu = this.colis.lieuActuel ?? '';
-    const pays = this.colis.paysDestination ?? '';
-
+    // ✅ Popup SANS villeActuelle / lieuActuel — uniquement coordonnées GPS
     this.marker.bindPopup(`
       <div class="aurex-popup">
-        <strong>${ville}${pays ? ', ' + pays : ''}</strong>
-        ${lieu ? `<br><small>${lieu}</small>` : ''}
+        <strong>Shipment position</strong>
         <br>
         <small>${lat.toFixed(5)}, ${lng.toFixed(5)}</small>
       </div>
@@ -231,7 +246,7 @@ export class TrackPage implements AfterViewInit, OnDestroy {
 
     this.marker.openPopup();
 
-    // --- Accuracy circle ---
+    // Cercle de précision
     const circleOptions: L.CircleOptions = {
       radius: 500,
       color: '#d7a94b',
@@ -244,11 +259,30 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     if (this.accuracyCircle) {
       this.accuracyCircle.setLatLng([lat, lng]);
     } else {
-      this.accuracyCircle = L.circle([lat, lng], circleOptions).addTo(this.map!);
+      this.accuracyCircle = L.circle([lat, lng], circleOptions).addTo(
+        this.map!
+      );
     }
 
-    // --- Recalculate container size ---
     setTimeout(() => this.map?.invalidateSize(), 150);
+  }
+
+  // Bascule Streets / Satellite
+  toggleMapMode(): void {
+    this.mapMode = this.mapMode === 'streets' ? 'satellite' : 'streets';
+    this.applyMapMode();
+  }
+
+  private applyMapMode(): void {
+    if (!this.map || !this.streetsLayer || !this.satelliteLayer) return;
+
+    if (this.mapMode === 'streets') {
+      this.map.removeLayer(this.satelliteLayer);
+      this.streetsLayer.addTo(this.map);
+    } else {
+      this.map.removeLayer(this.streetsLayer);
+      this.satelliteLayer.addTo(this.map);
+    }
   }
 
   // =============================================================
@@ -269,7 +303,7 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   }
 
   // =============================================================
-  // BARCODE
+  // CODE-BARRES
   // =============================================================
   private renderBarcode(): void {
     if (!this.colis) return;
@@ -303,7 +337,6 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     return i >= j;
   }
 
-  // ✅ LABELS UPDATED TO ENGLISH
   libelleStatut(statut: string | undefined): string {
     const libelles: Record<string, string> = {
       PENDING:            'Pending',

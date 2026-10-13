@@ -22,26 +22,42 @@ public class ColisController {
         this.colisService = colisService;
     }
 
-    // Créer un colis : réservé à l'administration
+    // =============================================================
+    // CRÉATION
+    // =============================================================
     @PostMapping("/api/admin/colis")
     public ResponseEntity<Colis> creer(@RequestBody Colis colis) {
         Colis nouveauColis = colisService.creer(colis);
         return ResponseEntity.status(HttpStatus.CREATED).body(nouveauColis);
     }
 
-    // Liste complète des colis
+    // =============================================================
+    // LECTURE
+    // =============================================================
     @GetMapping("/api/admin/colis")
     public List<Colis> listerTous() {
         return colisService.listerTous();
     }
 
-    // Détails complets d'un colis pour l'administration
     @GetMapping("/api/admin/colis/{id}")
     public Colis trouverParId(@PathVariable String id) {
         return colisService.trouverParId(id);
     }
 
-    // Mise à jour du statut, de la localisation et de l'historique
+    // =============================================================
+    // MISE À JOUR COMPLÈTE (NOUVEAU)
+    // =============================================================
+    @PutMapping("/api/admin/colis/{id}")
+    public Colis mettreAJourComplet(
+            @PathVariable String id,
+            @RequestBody Colis payload
+    ) {
+        return colisService.mettreAJourComplet(id, payload);
+    }
+
+    // =============================================================
+    // MISE À JOUR DU STATUT UNIQUEMENT
+    // =============================================================
     @PatchMapping("/api/admin/colis/{id}/statut")
     public Colis mettreAJourStatut(
             @PathVariable String id,
@@ -60,17 +76,25 @@ public class ColisController {
         );
     }
 
-    // Suppression administrative
+    // =============================================================
+    // SUPPRESSION
+    // =============================================================
     @DeleteMapping("/api/admin/colis/{id}")
     public ResponseEntity<Void> supprimer(@PathVariable String id) {
         colisService.supprimer(id);
         return ResponseEntity.noContent().build();
     }
 
+    // =============================================================
+    // SUIVI PUBLIC
+    // =============================================================
     /*
      * Suivi public.
      * Les téléphones, e-mails et adresses privées ne sont pas exposés ici.
      * L'administration peut consulter la fiche complète via /api/admin/colis/{id}.
+     *
+     * ⚠️ NOTE : on expose adresseOrigine et adresseDestination car ce sont
+     * des adresses d'entrepôt/agence (pas les domiciles privés).
      */
     @GetMapping("/api/tracking/{code}")
     public TrackingResponse suivre(@PathVariable String code) {
@@ -81,8 +105,10 @@ public class ColisController {
                 colis.statut,
                 colis.nomExpediteur,
                 colis.nomDestinataire,
+                colis.adresseOrigine,
                 colis.villeOrigine,
                 colis.paysOrigine,
+                colis.adresseDestination,
                 colis.villeDestination,
                 colis.paysDestination,
                 colis.transporteur,
@@ -118,6 +144,10 @@ public class ColisController {
         );
     }
 
+    // =============================================================
+    // DTO (records)
+    // =============================================================
+
     public record MiseAJourStatutRequest(
             StatutColis statut,
             String description,
@@ -135,8 +165,10 @@ public class ColisController {
             StatutColis statut,
             String nomExpediteur,
             String nomDestinataire,
+            String adresseOrigine,
             String villeOrigine,
             String paysOrigine,
+            String adresseDestination,
             String villeDestination,
             String paysDestination,
             String transporteur,

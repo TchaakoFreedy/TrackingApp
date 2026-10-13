@@ -15,7 +15,7 @@
       </div>
     }
 
-    <!-- ============ CREATION ============ -->
+    <!-- CREATION -->
     @if (mode === 'creation') {
       <div class="form-header">
         <span class="eyebrow">ADMINISTRATION</span>
@@ -24,112 +24,52 @@
       </div>
 
       <form (ngSubmit)="creer()" class="form-card">
-
+        <!-- SENDER -->
         <div class="form-section">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            Sender
-          </h3>
+          <h3>Sender</h3>
           <div class="form-grid">
-            <label>
-              Name *
-              <input name="nomExpediteur" [(ngModel)]="model.nomExpediteur" required />
-            </label>
-            <label>
-              Phone
-              <input name="telephoneExpediteur" [(ngModel)]="model.telephoneExpediteur" />
-            </label>
-            <label>
-              Email
-              <input type="email" name="emailExpediteur" [(ngModel)]="model.emailExpediteur" />
-            </label>
-            <label>
-              Address
-              <input name="adresseExpediteur" [(ngModel)]="model.adresseExpediteur" />
-            </label>
+            <label>Name *<input name="nomExpediteur" [(ngModel)]="model.nomExpediteur" required /></label>
+            <label>Phone<input name="telephoneExpediteur" [(ngModel)]="model.telephoneExpediteur" /></label>
+            <label>Email<input type="email" name="emailExpediteur" [(ngModel)]="model.emailExpediteur" /></label>
+            <label>Address<input name="adresseExpediteur" [(ngModel)]="model.adresseExpediteur" /></label>
+            <label>City<input name="villeExpediteur" [(ngModel)]="model.villeExpediteur" /></label>
+            <label>Country<input name="paysExpediteur" [(ngModel)]="model.paysExpediteur" /></label>
           </div>
         </div>
 
+        <!-- RECIPIENT -->
         <div class="form-section">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            Recipient
-          </h3>
+          <h3>Recipient</h3>
           <div class="form-grid">
-            <label>
-              Name *
-              <input name="nomDestinataire" [(ngModel)]="model.nomDestinataire" required />
-            </label>
-            <label>
-              Phone
-              <input name="telephoneDestinataire" [(ngModel)]="model.telephoneDestinataire" />
-            </label>
-            <label>
-              Email
-              <input type="email" name="emailDestinataire" [(ngModel)]="model.emailDestinataire" />
-            </label>
-            <label>
-              Address
-              <input name="adresseDestinataire" [(ngModel)]="model.adresseDestinataire" />
-            </label>
+            <label>Name *<input name="nomDestinataire" [(ngModel)]="model.nomDestinataire" required /></label>
+            <label>Phone<input name="telephoneDestinataire" [(ngModel)]="model.telephoneDestinataire" /></label>
+            <label>Email<input type="email" name="emailDestinataire" [(ngModel)]="model.emailDestinataire" /></label>
+            <label>Address<input name="adresseDestinataire" [(ngModel)]="model.adresseDestinataire" /></label>
+            <label>City<input name="villeDestinataire" [(ngModel)]="model.villeDestinataire" /></label>
+            <label>Country<input name="paysDestinataire" [(ngModel)]="model.paysDestinataire" /></label>
           </div>
         </div>
 
+        <!-- ORIGIN / DESTINATION -->
         <div class="form-section">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            Origin &amp; Destination
-          </h3>
+          <h3>Origin &amp; Destination</h3>
           <div class="form-grid">
-            <label>
-              Origin City *
-              <input name="villeOrigine" [(ngModel)]="model.villeOrigine" required />
-            </label>
-            <label>
-              Origin Country
-              <input name="paysOrigine" [(ngModel)]="model.paysOrigine" />
-            </label>
-            <label>
-              Destination City *
-              <input name="villeDestination" [(ngModel)]="model.villeDestination" required />
-            </label>
-            <label>
-              Destination Country
-              <input name="paysDestination" [(ngModel)]="model.paysDestination" />
-            </label>
+            <label>Origin Address<input name="adresseOrigine" [(ngModel)]="model.adresseOrigine" /></label>
+            <label>Origin City *<input name="villeOrigine" [(ngModel)]="model.villeOrigine" required /></label>
+            <label>Origin Country<input name="paysOrigine" [(ngModel)]="model.paysOrigine" /></label>
+            <label>Destination Address<input name="adresseDestination" [(ngModel)]="model.adresseDestination" /></label>
+            <label>Destination City *<input name="villeDestination" [(ngModel)]="model.villeDestination" required /></label>
+            <label>Destination Country<input name="paysDestination" [(ngModel)]="model.paysDestination" /></label>
           </div>
         </div>
 
+        <!-- TRANSPORT -->
         <div class="form-section">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13"/>
-              <path d="M16 8h4l3 3v5h-7V8z"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-            Transport
-          </h3>
+          <h3>Transport</h3>
           <div class="form-grid">
-            <label>
-              Carrier
-              <input name="transporteur" [(ngModel)]="model.transporteur" />
-            </label>
-            <label>
-              Shipment Type
-              <input name="typeExpedition" [(ngModel)]="model.typeExpedition" />
-            </label>
-            <label>
-              Transport Mode
+            <label>Carrier<input name="transporteur" [(ngModel)]="model.transporteur" /></label>
+            <label>Shipment Type<input name="typeExpedition" [(ngModel)]="model.typeExpedition" /></label>
+            <label>Transport Mode
               <select name="modeTransport" [(ngModel)]="model.modeTransport">
                 <option value="">—</option>
                 <option value="AIR">Air</option>
@@ -137,65 +77,28 @@
                 <option value="ROAD">Road</option>
               </select>
             </label>
-            <label>
-              Carrier Reference
-              <input name="referenceTransporteur" [(ngModel)]="model.referenceTransporteur" />
-            </label>
+            <label>Carrier Reference<input name="referenceTransporteur" [(ngModel)]="model.referenceTransporteur" /></label>
           </div>
         </div>
 
+        <!-- GOODS -->
         <div class="form-section">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-            </svg>
-            Goods
-          </h3>
+          <h3>Goods</h3>
           <div class="form-grid">
-            <label>
-              Product
-              <input name="produit" [(ngModel)]="model.produit" />
-            </label>
-            <label>
-              Quantity
-              <input type="number" name="quantite" [(ngModel)]="model.quantite" />
-            </label>
-            <label>
-              Weight (kg)
-              <input type="number" step="0.01" name="poids" [(ngModel)]="model.poids" />
-            </label>
-            <label>
-              Expected Delivery
-              <input type="date" name="dateLivraisonPrevue" [(ngModel)]="model.dateLivraisonPrevue" />
-            </label>
+            <label>Product<input name="produit" [(ngModel)]="model.produit" /></label>
+            <label>Description<input name="description" [(ngModel)]="model.description" /></label>
+            <label>Quantity<input type="number" name="quantite" [(ngModel)]="model.quantite" /></label>
+            <label>Weight (kg)<input type="number" step="0.01" name="poids" [(ngModel)]="model.poids" /></label>
+            <label>Expected Delivery<input type="date" name="dateLivraisonPrevue" [(ngModel)]="model.dateLivraisonPrevue" /></label>
           </div>
         </div>
 
+        <!-- LOCATION & NOTES — villeActuelle / lieuActuel retirés -->
         <div class="form-section">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 6v6l4 2"/>
-            </svg>
-            Location &amp; Notes
-          </h3>
+          <h3>Location &amp; Notes</h3>
           <div class="form-grid">
-            <label>
-              Current City
-              <input name="villeActuelle" [(ngModel)]="model.villeActuelle" />
-            </label>
-            <label>
-              Current Place
-              <input name="lieuActuel" [(ngModel)]="model.lieuActuel" />
-            </label>
-            <label>
-              Latitude
-              <input type="number" step="0.000001" name="latitude" [(ngModel)]="model.latitude" />
-            </label>
-            <label>
-              Longitude
-              <input type="number" step="0.000001" name="longitude" [(ngModel)]="model.longitude" />
-            </label>
+            <label>Latitude<input type="number" step="0.000001" name="latitude" [(ngModel)]="model.latitude" /></label>
+            <label>Longitude<input type="number" step="0.000001" name="longitude" [(ngModel)]="model.longitude" /></label>
           </div>
         </div>
 
@@ -216,7 +119,7 @@
       </form>
     }
 
-    <!-- ============ EDITION ============ -->
+    <!-- EDITION -->
     @if (mode === 'edition' && model.codeSuivi) {
       <div class="form-header">
         <span class="eyebrow">ADMINISTRATION</span>
@@ -224,88 +127,194 @@
         <p>{{ model.villeOrigine }} → {{ model.villeDestination }}</p>
       </div>
 
-      <div class="edit-grid">
+      <!-- TABS -->
+      <div class="edit-tabs">
+        <button type="button"
+                class="edit-tab"
+                [class.active]="editTab === 'details'"
+                (click)="editTab = 'details'">
+          Edit details
+        </button>
+        <button type="button"
+                class="edit-tab"
+                [class.active]="editTab === 'status'"
+                (click)="editTab = 'status'">
+          Quick status update
+        </button>
+      </div>
 
-        <div class="info-card">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4M12 8h.01"/>
-            </svg>
-            Information
-          </h3>
-          <dl>
-            <dt>Sender</dt><dd>{{ model.nomExpediteur }}</dd>
-            <dt>Recipient</dt><dd>{{ model.nomDestinataire }}</dd>
-            <dt>Current status</dt>
-            <dd>
-              <span class="status-badge" [attr.data-statut]="model.statut">
-                {{ libelleStatut(model.statut) }}
-              </span>
-            </dd>
-            <dt>Current city</dt><dd>{{ model.villeActuelle || '—' }}</dd>
-            <dt>Current place</dt><dd>{{ model.lieuActuel || '—' }}</dd>
-            <dt>Expected delivery</dt><dd>{{ model.dateLivraisonPrevue || '—' }}</dd>
-            <dt>Carrier</dt><dd>{{ model.transporteur || '—' }}</dd>
-            <dt>Mode</dt><dd>{{ model.modeTransport || '—' }}</dd>
-          </dl>
-        </div>
+      <!-- TAB: EDIT ALL DETAILS -->
+      @if (editTab === 'details') {
+        <form class="form-card" (ngSubmit)="enregistrerModifications()">
 
-        <form class="status-card" (ngSubmit)="mettreAJourStatut()">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 4 23 10 17 10"/>
-              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
-            </svg>
-            Update Status
-          </h3>
-
-          <label>
-            New status *
-            <select name="statut" [(ngModel)]="statutMaj.statut" required>
-              @for (s of statuts; track s) {
-                <option [value]="s">{{ libelleStatut(s) }}</option>
-              }
-            </select>
-          </label>
-
-          <label>
-            Description
-            <input name="description" [(ngModel)]="statutMaj.description" />
-          </label>
-
-          <div class="form-grid">
-            <label>
-              Current city
-              <input name="villeActuelle" [(ngModel)]="statutMaj.villeActuelle" />
-            </label>
-            <label>
-              Current place
-              <input name="lieuActuel" [(ngModel)]="statutMaj.lieuActuel" />
-            </label>
-            <label>
-              Latitude
-              <input type="number" step="0.000001" name="latitude" [(ngModel)]="statutMaj.latitude" />
-            </label>
-            <label>
-              Longitude
-              <input type="number" step="0.000001" name="longitude" [(ngModel)]="statutMaj.longitude" />
-            </label>
+          <!-- SENDER -->
+          <div class="form-section">
+            <h3>Sender</h3>
+            <div class="form-grid">
+              <label>Name *<input name="e_nomExpediteur" [(ngModel)]="model.nomExpediteur" required /></label>
+              <label>Phone<input name="e_telephoneExpediteur" [(ngModel)]="model.telephoneExpediteur" /></label>
+              <label>Email<input type="email" name="e_emailExpediteur" [(ngModel)]="model.emailExpediteur" /></label>
+              <label>Address<input name="e_adresseExpediteur" [(ngModel)]="model.adresseExpediteur" /></label>
+              <label>City<input name="e_villeExpediteur" [(ngModel)]="model.villeExpediteur" /></label>
+              <label>Country<input name="e_paysExpediteur" [(ngModel)]="model.paysExpediteur" /></label>
+            </div>
           </div>
 
-          <label>
-            Notes
-            <textarea name="remarques" rows="2" [(ngModel)]="statutMaj.remarques"></textarea>
+          <!-- RECIPIENT -->
+          <div class="form-section">
+            <h3>Recipient</h3>
+            <div class="form-grid">
+              <label>Name *<input name="e_nomDestinataire" [(ngModel)]="model.nomDestinataire" required /></label>
+              <label>Phone<input name="e_telephoneDestinataire" [(ngModel)]="model.telephoneDestinataire" /></label>
+              <label>Email<input type="email" name="e_emailDestinataire" [(ngModel)]="model.emailDestinataire" /></label>
+              <label>Address<input name="e_adresseDestinataire" [(ngModel)]="model.adresseDestinataire" /></label>
+              <label>City<input name="e_villeDestinataire" [(ngModel)]="model.villeDestinataire" /></label>
+              <label>Country<input name="e_paysDestinataire" [(ngModel)]="model.paysDestinataire" /></label>
+            </div>
+          </div>
+
+          <!-- ORIGIN / DESTINATION -->
+          <div class="form-section">
+            <h3>Origin &amp; Destination</h3>
+            <div class="form-grid">
+              <label>Origin Address<input name="e_adresseOrigine" [(ngModel)]="model.adresseOrigine" /></label>
+              <label>Origin City *<input name="e_villeOrigine" [(ngModel)]="model.villeOrigine" required /></label>
+              <label>Origin Country<input name="e_paysOrigine" [(ngModel)]="model.paysOrigine" /></label>
+              <label>Destination Address<input name="e_adresseDestination" [(ngModel)]="model.adresseDestination" /></label>
+              <label>Destination City *<input name="e_villeDestination" [(ngModel)]="model.villeDestination" required /></label>
+              <label>Destination Country<input name="e_paysDestination" [(ngModel)]="model.paysDestination" /></label>
+            </div>
+          </div>
+
+          <!-- TRANSPORT -->
+          <div class="form-section">
+            <h3>Transport</h3>
+            <div class="form-grid">
+              <label>Carrier<input name="e_transporteur" [(ngModel)]="model.transporteur" /></label>
+              <label>Shipment Type<input name="e_typeExpedition" [(ngModel)]="model.typeExpedition" /></label>
+              <label>Transport Mode
+                <select name="e_modeTransport" [(ngModel)]="model.modeTransport">
+                  <option value="">—</option>
+                  <option value="AIR">Air</option>
+                  <option value="SEA">Sea</option>
+                  <option value="ROAD">Road</option>
+                </select>
+              </label>
+              <label>Carrier Reference<input name="e_referenceTransporteur" [(ngModel)]="model.referenceTransporteur" /></label>
+            </div>
+          </div>
+
+          <!-- GOODS -->
+          <div class="form-section">
+            <h3>Goods</h3>
+            <div class="form-grid">
+              <label>Product<input name="e_produit" [(ngModel)]="model.produit" /></label>
+              <label>Description<input name="e_description" [(ngModel)]="model.description" /></label>
+              <label>Quantity<input type="number" name="e_quantite" [(ngModel)]="model.quantite" /></label>
+              <label>Weight (kg)<input type="number" step="0.01" name="e_poids" [(ngModel)]="model.poids" /></label>
+            </div>
+          </div>
+
+          <!-- DATES -->
+          <div class="form-section">
+            <h3>Dates &amp; Times</h3>
+            <div class="form-grid">
+              <label>Expected Delivery<input type="date" name="e_dateLivraisonPrevue" [(ngModel)]="model.dateLivraisonPrevue" /></label>
+              <label>Pickup Date<input type="date" name="e_dateRamassage" [(ngModel)]="model.dateRamassage" /></label>
+              <label>Pickup Time<input type="time" name="e_heureRamassage" [(ngModel)]="model.heureRamassage" /></label>
+              <label>Departure Date<input type="date" name="e_dateDepart" [(ngModel)]="model.dateDepart" /></label>
+              <label>Departure Time<input type="time" name="e_heureDepart" [(ngModel)]="model.heureDepart" /></label>
+              <label>Effective Delivery Date<input type="date" name="e_dateLivraisonEffective" [(ngModel)]="model.dateLivraisonEffective" /></label>
+              <label>Effective Delivery Time<input type="time" name="e_heureLivraisonEffective" [(ngModel)]="model.heureLivraisonEffective" /></label>
+            </div>
+          </div>
+
+          <!-- LOCATION — villeActuelle / lieuActuel retirés -->
+          <div class="form-section">
+            <h3>Location</h3>
+            <div class="form-grid">
+              <label>Latitude<input type="number" step="0.000001" name="e_latitude" [(ngModel)]="model.latitude" /></label>
+              <label>Longitude<input type="number" step="0.000001" name="e_longitude" [(ngModel)]="model.longitude" /></label>
+            </div>
+          </div>
+
+          <label class="full">
+            Comments
+            <textarea name="e_commentaires" rows="3" [(ngModel)]="model.commentaires"></textarea>
           </label>
 
-          <button class="button button-primary" type="submit" [disabled]="chargement">
-            Save Status
-          </button>
+          <div class="form-actions">
+            <button class="button button-primary" type="submit" [disabled]="chargement">
+              Save Changes
+            </button>
+            <a class="button button-outline" routerLink="/admin/colis">Back</a>
+          </div>
 
           @if (message) { <p class="form-notice">{{ message }}</p> }
           @if (erreur)  { <p class="alert-error">{{ erreur }}</p> }
         </form>
-      </div>
+      }
+
+      <!-- TAB: QUICK STATUS -->
+      @if (editTab === 'status') {
+        <div class="edit-grid">
+
+          <div class="info-card">
+            <h3>Information</h3>
+            <dl>
+              <dt>Sender</dt><dd>{{ model.nomExpediteur }}</dd>
+              <dt>Recipient</dt><dd>{{ model.nomDestinataire }}</dd>
+              <dt>Current status</dt>
+              <dd>
+                <span class="status-badge" [attr.data-statut]="model.statut">
+                  {{ libelleStatut(model.statut) }}
+                </span>
+              </dd>
+              <dt>Expected delivery</dt><dd>{{ model.dateLivraisonPrevue || '—' }}</dd>
+              <dt>Carrier</dt><dd>{{ model.transporteur || '—' }}</dd>
+              <dt>Mode</dt><dd>{{ model.modeTransport || '—' }}</dd>
+            </dl>
+          </div>
+
+          <form class="status-card" (ngSubmit)="mettreAJourStatut()">
+            <h3>Update Status</h3>
+
+            <label>
+              New status *
+              <select name="statut" [(ngModel)]="statutMaj.statut" required>
+                @for (s of statuts; track s) {
+                  <option [value]="s">{{ libelleStatut(s) }}</option>
+                }
+              </select>
+            </label>
+
+            <label>
+              Description
+              <input name="description" [(ngModel)]="statutMaj.description" />
+            </label>
+
+            <!-- ⚠️ Ces champs SONT GARDÉS : ils alimentent l'historique du tracking -->
+            <div class="form-grid">
+              <label>Current city<input name="villeActuelle" [(ngModel)]="statutMaj.villeActuelle" /></label>
+              <label>Current place<input name="lieuActuel" [(ngModel)]="statutMaj.lieuActuel" /></label>
+              <label>Latitude<input type="number" step="0.000001" name="latitude" [(ngModel)]="statutMaj.latitude" /></label>
+              <label>Longitude<input type="number" step="0.000001" name="longitude" [(ngModel)]="statutMaj.longitude" /></label>
+            </div>
+
+            <label>
+              Notes
+              <textarea name="remarques" rows="2" [(ngModel)]="statutMaj.remarques"></textarea>
+            </label>
+
+            <button class="button button-primary" type="submit" [disabled]="chargement">
+              Save Status
+            </button>
+
+            @if (message) { <p class="form-notice">{{ message }}</p> }
+            @if (erreur)  { <p class="alert-error">{{ erreur }}</p> }
+          </form>
+        </div>
+      }
     }
   </div>
 </section>

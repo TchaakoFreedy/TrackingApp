@@ -1,0 +1,89 @@
+<section class="admin-users">
+  <div class="container">
+
+    <div class="admin-header">
+      <div>
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1>User Management</h1>
+        <p>Create and manage administrator accounts.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a class="button button-outline" routerLink="/admin/colis">Back</a>
+        <button class="button button-primary" type="button" (click)="showCreateForm = !showCreateForm">
+          {{ showCreateForm ? 'Cancel' : '+ New user' }}
+        </button>
+      </div>
+    </div>
+
+    @if (showCreateForm) {
+      <form class="create-user-card" (ngSubmit)="creer()">
+        <h3>Create new user</h3>
+        <div class="form-grid">
+          <label>Full name *<input name="nom" [(ngModel)]="nouveau.nom" required /></label>
+          <label>Email *<input type="email" name="email" [(ngModel)]="nouveau.email" required /></label>
+          <label>Password *<input type="password" name="motDePasse" [(ngModel)]="nouveau.motDePasse" required /></label>
+          <label>Role
+            <select name="role" [(ngModel)]="nouveau.role">
+              @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+            </select>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="button button-primary" type="submit" [disabled]="chargement">Create user</button>
+        </div>
+        @if (message) { <p class="form-notice">{{ message }}</p> }
+        @if (erreur)  { <p class="alert-error">{{ erreur }}</p> }
+      </form>
+    }
+
+    @if (chargement) {
+      <div class="admin-loading"><span class="loading-spinner"></span><p>Loading…</p></div>
+    }
+
+    @if (erreur && !showCreateForm) { <div class="alert-error">{{ erreur }}</div> }
+
+    @if (users.length) {
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th class="align-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users; track u.id) {
+              <tr>
+                <td>{{ u.nom }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <select [ngModel]="u.role"
+                          (ngModelChange)="changerRole(u, $event)"
+                          [ngModelOptions]="{standalone: true}">
+                    @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+                  </select>
+                </td>
+                <td>
+                  <span class="status-badge" [attr.data-statut]="u.actif ? 'ACTIF' : 'INACTIF'">
+                    {{ u.actif ? 'Active' : 'Disabled' }}
+                  </span>
+                </td>
+                <td>{{ formatDate(u.dateCreation) }}</td>
+                <td class="actions">
+                  <button class="link" type="button" (click)="toggleActif(u)">
+                    {{ u.actif ? 'Disable' : 'Enable' }}
+                  </button>
+                  <button class="link danger" type="button" (click)="supprimer(u)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
