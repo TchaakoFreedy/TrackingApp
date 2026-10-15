@@ -133,7 +133,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "https://starline-xi.vercel.app",
+                "https://starline-express.site",
                 "http://localhost:4200",
                 "http://localhost:8080"
         ));
