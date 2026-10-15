@@ -63,10 +63,7 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.map?.remove();
-    this.map = undefined;
-    this.marker = undefined;
-    this.accuracyCircle = undefined;
+    this.destroyMap();
   }
 
   suivreColis(): void {
@@ -77,12 +74,16 @@ export class TrackPage implements AfterViewInit, OnDestroy {
 
     if (!code) {
       this.colis = null;
+      this.destroyMap();
       this.erreur = 'Please enter a tracking number.';
       this.cdr.detectChanges();
       return;
     }
 
     this.chargement = true;
+
+    // Détruit la carte précédente avant nouvelle recherche
+    this.destroyMap();
     this.cdr.detectChanges();
 
     this.trackingService
@@ -108,14 +109,20 @@ export class TrackPage implements AfterViewInit, OnDestroy {
           this.erreur = '';
           this.cdr.detectChanges();
 
+          // Attendre que le DOM soit rendu (bloc @if vient de s'afficher)
           setTimeout(() => {
-            this.renderMap();
-            void this.renderQrCode();
-            this.renderBarcode();
-          }, 100);
+            this.cdr.detectChanges();
+            // Deuxième délai pour laisser le navigateur calculer la hauteur du conteneur
+            setTimeout(() => {
+              this.renderMap();
+              void this.renderQrCode();
+              this.renderBarcode();
+            }, 60);
+          }, 60);
         },
         error: (error: HttpErrorResponse | Error) => {
           this.colis = null;
+          this.destroyMap();
 
           if (error.name === 'TimeoutError') {
             this.erreur = 'The request timed out. Please try again.';
@@ -148,6 +155,17 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   // =============================================================
   // CARTE
   // =============================================================
+  private destroyMap(): void {
+    if (this.map) {
+      this.map.remove();
+      this.map = undefined;
+    }
+    this.marker = undefined;
+    this.accuracyCircle = undefined;
+    this.streetsLayer = undefined;
+    this.satelliteLayer = undefined;
+  }
+
   private renderMap(): void {
     if (!this.colis) return;
 
@@ -157,60 +175,81 @@ export class TrackPage implements AfterViewInit, OnDestroy {
       return;
     }
 
+    // Sécurité : force une hauteur si le CSS n'a pas été appliqué
+    if (el.offsetHeight < 50) {
+      el.style.height = '420px';
+      el.style.width = '100%';
+    }
+
     const lat = this.colis.latitude;
     const lng = this.colis.longitude;
 
     if (lat == null || lng == null) {
-      this.map?.remove();
-      this.map = undefined;
-      this.marker = undefined;
-      this.accuracyCircle = undefined;
+      this.destroyMap();
       return;
     }
 
-    // Création de la carte si elle n'existe pas encore
-    if (!this.map) {
-      this.map = L.map(el, {
-        center: [lat, lng],
-        zoom: 13,
-        scrollWheelZoom: true,
-        dragging: true,
-        doubleClickZoom: true,
-        boxZoom: true,
-        keyboard: true,
-        zoomControl: true,
-        touchZoom: true
-      });
-
-      // Couche "streets"
-      this.streetsLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          maxZoom: 19,
-          attribution: '&copy; OpenStreetMap'
-        }
-      );
-
-      // Couche "satellite" (Esri World Imagery)
-      this.satelliteLayer = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        {
-          maxZoom: 19,
-          attribution:
-            'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics'
-        }
-      );
-
-      this.applyMapMode();
-    } else {
-      // La carte existe déjà : on vole vers la nouvelle position
-      this.map.flyTo([lat, lng], 13, {
-        duration: 1.5,
-        easeLinearity: 0.25
-      });
+    // Si la carte existe déjà, on vole vers la nouvelle position
+    if (this.map) {
+      this.map.flyTo([lat, lng], 13, { duration: 1.2, easeLinearity: 0.25 });
+      this.updateMarker(lat, lng);
+      this.updateAccuracyCircle(lat, lng);
+      setTimeout(() => this.map?.invalidateSize(), 200);
+      return;
     }
 
-    // Icône personnalisée avec pulsation
+    // Création de la carte Leaflet
+    this.map = L.map(el, {
+      center: [lat, lng],
+      zoom: 13,
+      zoomControl: true,
+      scrollWheelZoom: true,
+      dragging: true,
+      doubleClickZoom: true,
+      boxZoom: true,
+      keyboard: true,
+      touchZoom: true,
+      preferCanvas: true,
+      zoomAnimation: true,
+      fadeAnimation: true,
+      markerZoomAnimation: true
+    });
+
+    // Couche "streets"
+    this.streetsLayer = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors',
+        crossOrigin: true
+      }
+    );
+
+    // Couche "satellite" (Esri World Imagery)
+    this.satelliteLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      {
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        attribution:
+          'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics',
+        crossOrigin: true
+      }
+    );
+
+    this.applyMapMode();
+    this.updateMarker(lat, lng);
+    this.updateAccuracyCircle(lat, lng);
+
+    // Leaflet a besoin d'un invalidateSize après le rendu complet
+    setTimeout(() => this.map?.invalidateSize(), 200);
+    setTimeout(() => this.map?.invalidateSize(), 500);
+  }
+
+  private updateMarker(lat: number, lng: number): void {
+    if (!this.map) return;
+
     const icon = L.divIcon({
       className: 'aurex-marker',
       html: `
@@ -224,18 +263,18 @@ export class TrackPage implements AfterViewInit, OnDestroy {
       popupAnchor: [0, -22]
     });
 
-    // Marqueur
     if (this.marker) {
       this.marker.setLatLng([lat, lng]).setIcon(icon);
     } else {
       this.marker = L.marker([lat, lng], {
         icon,
         draggable: false,
-        autoPan: true
-      }).addTo(this.map!);
+        autoPan: true,
+        riseOnHover: true,
+        zIndexOffset: 1000
+      }).addTo(this.map);
     }
 
-    // ✅ Popup SANS villeActuelle / lieuActuel — uniquement coordonnées GPS
     this.marker.bindPopup(`
       <div class="aurex-popup">
         <strong>Shipment position</strong>
@@ -245,8 +284,11 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     `);
 
     this.marker.openPopup();
+  }
 
-    // Cercle de précision
+  private updateAccuracyCircle(lat: number, lng: number): void {
+    if (!this.map) return;
+
     const circleOptions: L.CircleOptions = {
       radius: 500,
       color: '#d7a94b',
@@ -259,15 +301,10 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     if (this.accuracyCircle) {
       this.accuracyCircle.setLatLng([lat, lng]);
     } else {
-      this.accuracyCircle = L.circle([lat, lng], circleOptions).addTo(
-        this.map!
-      );
+      this.accuracyCircle = L.circle([lat, lng], circleOptions).addTo(this.map);
     }
-
-    setTimeout(() => this.map?.invalidateSize(), 150);
   }
 
-  // Bascule Streets / Satellite
   toggleMapMode(): void {
     this.mapMode = this.mapMode === 'streets' ? 'satellite' : 'streets';
     this.applyMapMode();
@@ -277,11 +314,19 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     if (!this.map || !this.streetsLayer || !this.satelliteLayer) return;
 
     if (this.mapMode === 'streets') {
-      this.map.removeLayer(this.satelliteLayer);
-      this.streetsLayer.addTo(this.map);
+      if (this.map.hasLayer(this.satelliteLayer)) {
+        this.map.removeLayer(this.satelliteLayer);
+      }
+      if (!this.map.hasLayer(this.streetsLayer)) {
+        this.streetsLayer.addTo(this.map);
+      }
     } else {
-      this.map.removeLayer(this.streetsLayer);
-      this.satelliteLayer.addTo(this.map);
+      if (this.map.hasLayer(this.streetsLayer)) {
+        this.map.removeLayer(this.streetsLayer);
+      }
+      if (!this.map.hasLayer(this.satelliteLayer)) {
+        this.satelliteLayer.addTo(this.map);
+      }
     }
   }
 
@@ -295,11 +340,15 @@ export class TrackPage implements AfterViewInit, OnDestroy {
 
     const url = `${window.location.origin}/track?code=${this.colis.codeSuivi}`;
 
-    await QRCode.toCanvas(canvas, url, {
-      width: 180,
-      margin: 1,
-      color: { dark: '#0c1e33', light: '#ffffff' }
-    });
+    try {
+      await QRCode.toCanvas(canvas, url, {
+        width: 180,
+        margin: 1,
+        color: { dark: '#0c1e33', light: '#ffffff' }
+      });
+    } catch (e) {
+      console.warn('[QR] render failed', e);
+    }
   }
 
   // =============================================================
