@@ -1,3 +1,4 @@
+
 package com.trackingapp.backend.config;
 
 import com.trackingapp.backend.repository.UtilisateurRepository;
@@ -35,10 +36,6 @@ public class SecurityConfig {
         this.utilisateurRepository = utilisateurRepository;
     }
 
-    // =============================================================
-    // Le filtre est créé ici, PAS comme @Component
-    // → il ne sera PAS auto-enregistré dans la chaîne des servlets
-    // =============================================================
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(jwtService, utilisateurRepository);
@@ -49,7 +46,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Pour renvoyer 401 (au lieu de 403) quand pas de token valide
     @Bean
     public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
         return (request, response, authException) -> {
@@ -79,7 +75,6 @@ public class SecurityConfig {
                         )
                 )
 
-                // ⬇️ 401 au lieu de 403 quand non authentifié
                 .exceptionHandling(ex ->
                         ex.authenticationEntryPoint(jwtAuthenticationEntryPoint())
                 )
@@ -106,19 +101,15 @@ public class SecurityConfig {
                                 "/api/contact"
                         ).permitAll()
 
-                        // Profil — authentifié
                         .requestMatchers("/api/users/me").authenticated()
 
-                        // Gestion utilisateurs — ADMIN
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                        // Admin colis — ADMIN
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
 
-                // ⬇️ Utilise le bean, PAS un @Component auto-enregistré
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
@@ -133,7 +124,10 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
+                "https://starline-express.website",
+                "https://www.starline-express.website",
                 "https://starline-express.site",
+                "https://starline-xi.vercel.app",
                 "http://localhost:4200",
                 "http://localhost:8080"
         ));
@@ -147,6 +141,7 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
 
         return source;
