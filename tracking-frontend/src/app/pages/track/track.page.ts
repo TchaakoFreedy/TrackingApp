@@ -53,8 +53,6 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   ] as const;
 
   private map?: L.Map;
-  private marker?: L.Marker;
-  private accuracyCircle?: L.Circle;
   private streetsLayer?: L.TileLayer;
   private satelliteLayer?: L.TileLayer;
 
@@ -153,15 +151,13 @@ export class TrackPage implements AfterViewInit, OnDestroy {
   }
 
   // =============================================================
-  // CARTE
+  // CARTE — fond uniquement, AUCUN marqueur / point / cercle
   // =============================================================
   private destroyMap(): void {
     if (this.map) {
       this.map.remove();
       this.map = undefined;
     }
-    this.marker = undefined;
-    this.accuracyCircle = undefined;
     this.streetsLayer = undefined;
     this.satelliteLayer = undefined;
   }
@@ -189,16 +185,15 @@ export class TrackPage implements AfterViewInit, OnDestroy {
       return;
     }
 
-    // Si la carte existe déjà, on vole vers la nouvelle position
+    // Si la carte existe déjà, on recentre simplement
     if (this.map) {
       this.map.flyTo([lat, lng], 13, { duration: 1.2, easeLinearity: 0.25 });
-      this.updateMarker(lat, lng);
-      this.updateAccuracyCircle(lat, lng);
       setTimeout(() => this.map?.invalidateSize(), 200);
       return;
     }
 
-    // Création de la carte Leaflet
+    // Création de la carte Leaflet — centrée sur les coordonnées
+    // mais SANS aucun marqueur, point ou cercle ajouté
     this.map = L.map(el, {
       center: [lat, lng],
       zoom: 13,
@@ -239,70 +234,10 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     );
 
     this.applyMapMode();
-    this.updateMarker(lat, lng);
-    this.updateAccuracyCircle(lat, lng);
 
     // Leaflet a besoin d'un invalidateSize après le rendu complet
     setTimeout(() => this.map?.invalidateSize(), 200);
     setTimeout(() => this.map?.invalidateSize(), 500);
-  }
-
-  private updateMarker(lat: number, lng: number): void {
-    if (!this.map) return;
-
-    const icon = L.divIcon({
-      className: 'aurex-marker',
-      html: `
-        <div class="aurex-marker-wrapper">
-          <div class="aurex-marker-pulse"></div>
-          <div class="aurex-marker-dot"></div>
-        </div>
-      `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
-      popupAnchor: [0, -22]
-    });
-
-    if (this.marker) {
-      this.marker.setLatLng([lat, lng]).setIcon(icon);
-    } else {
-      this.marker = L.marker([lat, lng], {
-        icon,
-        draggable: false,
-        autoPan: true,
-        riseOnHover: true,
-        zIndexOffset: 1000
-      }).addTo(this.map);
-    }
-
-    this.marker.bindPopup(`
-      <div class="aurex-popup">
-        <strong>Shipment position</strong>
-        <br>
-        <small>${lat.toFixed(5)}, ${lng.toFixed(5)}</small>
-      </div>
-    `);
-
-    this.marker.openPopup();
-  }
-
-  private updateAccuracyCircle(lat: number, lng: number): void {
-    if (!this.map) return;
-
-    const circleOptions: L.CircleOptions = {
-      radius: 500,
-      color: '#d7a94b',
-      weight: 2,
-      opacity: 0.6,
-      fillColor: '#d7a94b',
-      fillOpacity: 0.15
-    };
-
-    if (this.accuracyCircle) {
-      this.accuracyCircle.setLatLng([lat, lng]);
-    } else {
-      this.accuracyCircle = L.circle([lat, lng], circleOptions).addTo(this.map);
-    }
   }
 
   toggleMapMode(): void {
@@ -400,17 +335,6 @@ export class TrackPage implements AfterViewInit, OnDestroy {
     };
     if (!statut) return 'Status unavailable';
     return libelles[statut] ?? statut.replaceAll('_', ' ');
-  }
-
-  formatDate(date: string | undefined): string {
-    if (!date) return 'To be confirmed';
-    const valeur = new Date(`${date}T12:00:00`);
-    if (Number.isNaN(valeur.getTime())) return date;
-    return new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    }).format(valeur);
   }
 
   googleMapsUrl(lat: number, lng: number): string {

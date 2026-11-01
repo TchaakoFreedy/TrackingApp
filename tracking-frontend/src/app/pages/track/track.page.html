@@ -150,7 +150,6 @@
         </div>
 
         <!-- ========== BLOC 4 : DÉTAILS ========== -->
-        <!-- ✅ Current City et Current Location retirés — remplacés par Origin/Destination Address -->
         <div class="result-details">
           <div>
             <span>Current Status</span>
@@ -163,10 +162,6 @@
           <div>
             <span>Destination Address</span>
             <strong>{{ shipment.adresseDestination || shipment.villeDestination || '—' }}</strong>
-          </div>
-          <div>
-            <span>Expected Delivery</span>
-            <strong>{{ formatDate(shipment.dateLivraisonPrevue) }}</strong>
           </div>
           <div>
             <span>Carrier</span>
@@ -217,10 +212,7 @@
                   <div>
                     <strong>{{ libelleStatut(event.statut) }}</strong>
                     <p>{{ event.description || 'Status updated' }}</p>
-                    <small>
-                      {{ event.date || '' }} {{ event.heure || '' }}
-                      @if (event.ville) { · {{ event.ville }} }
-                    </small>
+                    @if (event.ville) { <small>{{ event.ville }}</small> }
                     @if (event.lieu) { <p>{{ event.lieu }}</p> }
                     @if (event.remarques) { <p>{{ event.remarques }}</p> }
                   </div>
@@ -242,7 +234,7 @@
           </section>
         }
 
-        <!-- ========== BLOC 6 : CARTE (avec toggle satellite) ========== -->
+        <!-- ========== BLOC 6 : CARTE (fond seul, sans aucun repère) ========== -->
         <section class="map-section">
 
           <div class="map-heading-row">
@@ -274,7 +266,6 @@
           @if (shipment.latitude != null && shipment.longitude != null) {
             <div #mapContainer class="map-container"></div>
 
-            <!-- ✅ Footer map SANS villeActuelle / lieuActuel — uniquement coordonnées GPS -->
             <div class="map-footer">
               <div class="map-info">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
